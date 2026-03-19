@@ -64,6 +64,11 @@ const ScanPage = () => {
         toast({ title: "Invalid file", description: "Please drop an image file.", variant: "destructive" });
         return;
       }
+      const MAX_FILE_SIZE = 10 * 1024 * 1024;
+      if (file.size > MAX_FILE_SIZE) {
+        toast({ title: "File too large", description: "Please upload an image smaller than 10 MB.", variant: "destructive" });
+        return;
+      }
       const reader = new FileReader();
       reader.onload = async (ev) => {
         const imageData = ev.target?.result as string;
