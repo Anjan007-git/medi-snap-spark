@@ -1,76 +1,104 @@
-import { useNavigate } from "react-router-dom";
-import { Camera, Upload, Sparkles, Shield, Zap, Eye, Clock } from "lucide-react";
-import { MediCard } from "@/components/ui/MediCard";
-import HowItWorks from "@/components/HowItWorks";
-
-const features = [
-  { icon: Zap, title: "Instant Results", description: "Get medicine info in seconds with AI-powered scanning" },
-  { icon: Eye, title: "Accurate Detection", description: "Advanced image recognition for reliable identification" },
-  { icon: Shield, title: "Trusted Information", description: "Verified medical data with safety warnings" },
-  { icon: Clock, title: "Scan History", description: "Access your previously scanned medicines anytime" },
-];
+import { useRef, useCallback, useState } from "react";
+import Header from "@/components/Header";
+import ScanCard from "@/components/ScanCard";
+import FeatureCards from "@/components/FeatureCards";
+import CameraCapture from "@/components/CameraCapture";
+import ScanningOverlay from "@/components/ScanningOverlay";
+import MedicineResult from "@/components/MedicineResult";
+import { useMedicineScanner } from "@/hooks/useMedicineScanner";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
-  const navigate = useNavigate();
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
+  const { isScanning, result, error, scanMedicine, clearResult } = useMedicineScanner();
+
+  const handleScanClick = useCallback(() => {
+    setIsCameraOpen(true);
+  }, []);
+
+  const handleUploadClick = useCallback(() => {
+    fileInputRef.current?.click();
+  }, []);
+
+  const handleCapture = useCallback(async (imageData: string) => {
+    setIsCameraOpen(false);
+    await scanMedicine(imageData);
+  }, [scanMedicine]);
+
+  const handleFileUpload = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      toast({
+        title: "Invalid file type",
+        description: "Please upload an image file.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Convert to base64
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const imageData = e.target?.result as string;
+      await scanMedicine(imageData);
+    };
+    reader.readAsDataURL(file);
+
+    // Reset input
+    event.target.value = "";
+  }, [scanMedicine, toast]);
+
+  const handleBack = useCallback(() => {
+    clearResult();
+  }, [clearResult]);
+
+  // Show error toast if scan fails
+  if (error) {
+    toast({
+      title: "Scan Failed",
+      description: error,
+      variant: "destructive",
+    });
+  }
 
   return (
-    <div className="min-h-screen">
-      {/* Hero */}
-      <section className="px-4 sm:px-6 pt-12 pb-8 max-w-4xl mx-auto text-center">
-        <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-medium mb-6">
-          <Sparkles className="w-4 h-4" />
-          AI-Powered Medicine Scanner
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-bold text-foreground leading-tight mb-4">
-          Identify Any Medicine{" "}
-          <span className="text-gradient">Instantly</span>
-        </h1>
-        <p className="text-muted-foreground text-base sm:text-lg max-w-lg mx-auto mb-8 leading-relaxed">
-          Scan or upload a photo of any medicine to get detailed information about uses, dosage, side effects, and safety warnings.
-        </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
-          <button
-            onClick={() => navigate("/scan")}
-            className="w-full sm:w-auto gradient-teal text-primary-foreground rounded-xl py-4 px-8 flex items-center justify-center gap-3 font-semibold text-lg shadow-card hover:shadow-card-hover transition-all active:scale-[0.98]"
-          >
-            <Camera className="w-5 h-5" />
-            Scan Medicine
-          </button>
-          <button
-            onClick={() => navigate("/search")}
-            className="w-full sm:w-auto bg-card text-foreground rounded-xl py-4 px-8 flex items-center justify-center gap-3 font-medium shadow-card hover:shadow-card-hover transition-all active:scale-[0.98] border border-border"
-          >
-            Search by Name
-          </button>
-        </div>
-      </section>
+    <div className="min-h-screen pb-8">
+      {/* Header - Always visible */}
+      <Header />
 
-      {/* How it Works */}
-      <HowItWorks />
+      {/* Main Content */}
+      {result ? (
+        <MedicineResult medicine={result} onBack={handleBack} />
+      ) : (
+        <>
+          <ScanCard onScanClick={handleScanClick} onUploadClick={handleUploadClick} />
+          <FeatureCards />
+        </>
+      )}
 
-      {/* Features */}
-      <section className="px-4 sm:px-6 py-12 max-w-4xl mx-auto">
-        <h2 className="text-2xl sm:text-3xl font-bold text-center text-foreground mb-8">
-          Why Choose MediScan?
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {features.map((f, i) => (
-            <MediCard
-              key={f.title}
-              className="flex items-start gap-4 animate-fade-in-up"
-              style={{ animationDelay: `${i * 80}ms` }}
-            >
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <f.icon className="w-6 h-6 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-foreground mb-1">{f.title}</h3>
-                <p className="text-muted-foreground text-sm">{f.description}</p>
-              </div>
-            </MediCard>
-          ))}
-        </div>
-      </section>
+      {/* Hidden file input for upload */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleFileUpload}
+      />
+
+      {/* Camera Modal */}
+      <CameraCapture
+        isOpen={isCameraOpen}
+        onClose={() => setIsCameraOpen(false)}
+        onCapture={handleCapture}
+      />
+
+      {/* Scanning Overlay */}
+      <ScanningOverlay isVisible={isScanning} />
     </div>
   );
 };
