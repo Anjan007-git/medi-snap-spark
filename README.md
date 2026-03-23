@@ -32,10 +32,10 @@ To run this project locally:
 
 ```bash
 # Clone the repository
-git clone <YOUR_GITHUB_REPO_URL>
+git clone <[https://github.com/Anjan007-git/MediScan---Medicine-Analyzer])>
 
 # Navigate to the project folder
-cd <PROJECT_NAME>
+cd <PROJECMediScan---Medicine-Analyzer>
 
 # Install dependencies
 npm install
