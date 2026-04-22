@@ -11,13 +11,13 @@ const MediCard = React.forwardRef<HTMLDivElement, MediCardProps>(
       <div
         ref={ref}
         className={cn(
-          "rounded-[24px] p-5 transition-all duration-300",
+          "rounded-3xl p-5 transition-all duration-300 relative overflow-hidden",
           {
             "glass": variant === "default",
-            "glass-strong text-foreground": variant === "primary",
-            "glass border-l-[3px] border-l-warning": variant === "warning",
-            "glass border-l-[3px] border-l-danger": variant === "danger",
-            "glass border-l-[3px] border-l-primary": variant === "highlight",
+            "glass-strong text-white": variant === "primary",
+            "glass border-l-4 border-l-warning": variant === "warning",
+            "glass border-l-4 border-l-danger": variant === "danger",
+            "glass border-l-4 border-l-primary": variant === "highlight",
           },
           className
         )}
@@ -57,7 +57,7 @@ const MediCardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("pt-3 text-sm leading-relaxed text-foreground/85", className)} {...props} />
+  <div ref={ref} className={cn("pt-3 text-sm leading-relaxed", className)} {...props} />
 ));
 MediCardContent.displayName = "MediCardContent";
 
