@@ -28,6 +28,13 @@ export default {
           foreground: "hsl(var(--primary-foreground))",
           light: "hsl(var(--primary-light))",
           muted: "hsl(var(--primary-muted))",
+          glow: "hsl(var(--primary-glow))",
+          deep: "hsl(var(--primary-deep))",
+        },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+          light: "hsl(var(--success-light))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
