@@ -12,19 +12,19 @@
 
 @layer base {
   :root {
-    /* Brand blue gradient (#4facfe → #1c6cff) */
-    --primary: 217 100% 56%;
+    /* Medical teal gradient (#2DD4BF → #0D9488), primary #14B8A6 */
+    --primary: 173 80% 40%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 210 100% 96%;
-    --primary-muted: 215 60% 60%;
-    --primary-glow: 204 100% 65%;
-    --primary-deep: 220 100% 45%;
+    --primary-light: 168 76% 95%;
+    --primary-muted: 173 50% 55%;
+    --primary-glow: 168 76% 60%;
+    --primary-deep: 175 84% 32%;
 
-    /* Soft bluish-white background */
-    --background: 210 60% 98%;
-    --background-gradient-start: 210 100% 99%;
-    --background-gradient-mid: 210 80% 96%;
-    --background-gradient-end: 217 90% 92%;
+    /* Soft teal-tinted background */
+    --background: 170 60% 98%;
+    --background-gradient-start: 210 40% 99%;
+    --background-gradient-mid: 168 76% 95%;
+    --background-gradient-end: 170 70% 90%;
     --foreground: 222 47% 11%;
 
     /* Glass surfaces */
