@@ -69,25 +69,34 @@ const MedicineResult = ({ medicine, confidence, onBack }: MedicineResultProps) =
 
   return (
     <div className="pb-8 animate-fade-in-up">
+    <div className="pb-8 animate-fade-in-up">
       {/* Medicine Header */}
       <div className="px-6 mt-4">
-        <MediCard className="bg-gradient-to-br from-primary-light to-card">
-          <div className="flex items-center gap-4">
+        <div className="glass-strong rounded-[28px] p-5 relative overflow-hidden">
+          <div className="absolute -top-12 -right-12 w-40 h-40 rounded-full bg-primary-glow/25 blur-3xl pointer-events-none" />
+          <div className="relative flex items-center gap-4">
             <button
               onClick={onBack}
-              className="w-12 h-12 rounded-full bg-card/80 flex items-center justify-center shadow-card hover:shadow-card-hover transition-all"
+              className="w-12 h-12 rounded-full glass flex items-center justify-center hover:shadow-glass-lg active:scale-95 transition-all flex-shrink-0"
             >
               <ArrowLeft className="w-5 h-5 text-foreground" />
             </button>
-            <div className="flex-1">
-              <h2 className="text-2xl font-bold text-primary">{medicine.name}</h2>
-              <p className="text-muted-foreground text-sm">Generic: {medicine.generic}</p>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                <StatusTag confidence={confidence} />
+                <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border bg-primary/10 text-primary border-primary/30">
+                  <FlaskConical className="w-3 h-3" />
+                  Medicine
+                </div>
+              </div>
+              <h2 className="text-2xl font-bold text-gradient tracking-tight truncate">{medicine.name}</h2>
+              <p className="text-muted-foreground text-sm truncate">Generic: {medicine.generic}</p>
               <div className="mt-2">
                 <ConfidenceBadge confidence={confidence} />
               </div>
             </div>
           </div>
-        </MediCard>
+        </div>
       </div>
 
       {/* Low confidence warning */}
@@ -254,11 +263,32 @@ const MedicineResult = ({ medicine, confidence, onBack }: MedicineResultProps) =
         )}
       </div>
 
+      {/* Action buttons */}
+      <div className="px-6 mt-5 grid grid-cols-3 gap-3">
+        <button
+          onClick={onBack}
+          className="glass rounded-2xl py-3 flex flex-col items-center gap-1 active:scale-95 transition-transform hover:shadow-glass-lg"
+        >
+          <RefreshCw className="w-5 h-5 text-primary" />
+          <span className="text-[11px] font-semibold text-foreground">Scan Again</span>
+        </button>
+        <button className="glass rounded-2xl py-3 flex flex-col items-center gap-1 active:scale-95 transition-transform hover:shadow-glass-lg">
+          <Bookmark className="w-5 h-5 text-primary" />
+          <span className="text-[11px] font-semibold text-foreground">Save</span>
+        </button>
+        <button className="glass rounded-2xl py-3 flex flex-col items-center gap-1 active:scale-95 transition-transform hover:shadow-glass-lg">
+          <Share2 className="w-5 h-5 text-primary" />
+          <span className="text-[11px] font-semibold text-foreground">Share</span>
+        </button>
+      </div>
+
       {/* Disclaimer */}
-      <div className="px-6 mt-6">
-        <p className="text-center text-xs text-muted-foreground leading-relaxed">
-          This information is for educational purposes only. Always consult a doctor or pharmacist.
-        </p>
+      <div className="px-6 mt-5">
+        <div className="glass-subtle rounded-2xl px-4 py-3">
+          <p className="text-center text-xs text-muted-foreground leading-relaxed">
+            This information is for educational purposes only. Always consult a doctor or pharmacist.
+          </p>
+        </div>
       </div>
     </div>
   );
