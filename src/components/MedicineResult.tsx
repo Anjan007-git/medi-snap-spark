@@ -69,7 +69,6 @@ const MedicineResult = ({ medicine, confidence, onBack }: MedicineResultProps) =
 
   return (
     <div className="pb-8 animate-fade-in-up">
-    <div className="pb-8 animate-fade-in-up">
       {/* Medicine Header */}
       <div className="px-6 mt-4">
         <div className="glass-strong rounded-[28px] p-5 relative overflow-hidden">
