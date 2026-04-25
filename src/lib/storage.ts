@@ -4,7 +4,6 @@ import type { Medicine } from "./medicineApi";
 const HISTORY_KEY = "mediscan:history:v2";
 const SAVED_KEY = "mediscan:saved:v2";
 const SCANS_KEY = "mediscan:scans:v1";
-const PLAN_KEY = "mediscan:plan:v1";
 const THEME_KEY = "mediscan:theme:v1";
 const RECENT_SEARCH_KEY = "mediscan:recent-searches:v1";
 
@@ -84,12 +83,8 @@ export const toggleSaved = (item: HistoryItem) => {
 export const removeSaved = (id: string) =>
   safeWrite(SAVED_KEY, getSaved().filter((s) => s.id !== id));
 
-// ---------------- Plan / scan limit ----------------
-export type Plan = "free" | "premium";
+// ---------------- Scan limit ----------------
 const FREE_WEEKLY_LIMIT = 10;
-
-export const getPlan = (): Plan => (safeRead<Plan>(PLAN_KEY, "free") as Plan);
-export const setPlan = (plan: Plan) => safeWrite(PLAN_KEY, plan);
 
 interface ScanRecord {
   scans: number[]; // timestamps
@@ -112,10 +107,7 @@ export const getWeeklyScanCount = () => {
 
 export const getScanLimit = () => FREE_WEEKLY_LIMIT;
 
-export const canScan = () => {
-  if (getPlan() === "premium") return true;
-  return getWeeklyScanCount() < FREE_WEEKLY_LIMIT;
-};
+export const canScan = () => getWeeklyScanCount() < FREE_WEEKLY_LIMIT;
 
 // ---------------- Theme ----------------
 export type Theme = "light" | "dark";
