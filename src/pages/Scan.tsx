@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Camera, Upload, X, RotateCcw, Zap, ZapOff, ImageIcon } from "lucide-react";
+import { Camera, Upload, X, RotateCcw, Zap, ImageIcon } from "lucide-react";
 import { useMedicineScanner } from "@/hooks/useMedicineScanner";
 import { fromAiResult } from "@/lib/medicineApi";
-import { addHistory, canScan, getWeeklyScanCount, getScanLimit, getPlan, recordScan } from "@/lib/storage";
+import { addHistory, canScan, getWeeklyScanCount, getScanLimit, recordScan } from "@/lib/storage";
 import { toast } from "sonner";
 
 const Scan = () => {

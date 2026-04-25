@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { Sun, Moon, Crown, Sparkles, ShieldCheck, Info, Heart, Bookmark, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import {
-  getPlan,
-  setPlan,
   getTheme,
   setTheme,
   getWeeklyScanCount,
@@ -14,7 +12,6 @@ import { toast } from "sonner";
 
 const Settings = () => {
   const navigate = useNavigate();
-  const [plan, setPlanState] = useState(getPlan());
   const [theme, setThemeState] = useState(getTheme());
   const [scans, setScans] = useState(getWeeklyScanCount());
   const limit = getScanLimit();
@@ -31,15 +28,7 @@ const Settings = () => {
   };
 
   const handleUpgrade = () => {
-    setPlan("premium");
-    setPlanState("premium");
-    toast.success("Welcome to Premium! Unlimited scans unlocked.");
-  };
-
-  const handleDowngrade = () => {
-    setPlan("free");
-    setPlanState("free");
-    toast("Switched to Free plan");
+    toast.info("Premium upgrades require verified checkout and are coming soon.");
   };
 
   return (
@@ -60,30 +49,27 @@ const Settings = () => {
                 className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-glow"
                 style={{ background: "var(--gradient-primary)" }}
               >
-                {plan === "premium" ? <Crown className="w-5 h-5" /> : <Sparkles className="w-5 h-5" />}
+                <Sparkles className="w-5 h-5" />
               </div>
               <div>
                 <p className="font-bold text-foreground">
-                  {plan === "premium" ? "Premium Plan" : "Basic Plan"}
+                  Basic Plan
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {plan === "premium" ? "₹199/month • Unlimited" : "Free • 10 scans/week"}
+                  Free • 10 scans/week
                 </p>
               </div>
             </div>
             <span
               className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${
-                plan === "premium"
-                  ? "bg-success/15 text-success border border-success/30"
-                  : "glass-subtle text-primary border border-primary/30"
+                "glass-subtle text-primary border border-primary/30"
               }`}
             >
-              {plan}
+              free
             </span>
           </div>
 
-          {plan === "free" && (
-            <>
+          <>
               <div className="glass-subtle rounded-2xl p-3 mb-3">
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="text-xs font-semibold text-foreground">Weekly scans</span>
@@ -113,17 +99,7 @@ const Settings = () => {
               <p className="text-[10px] text-center text-muted-foreground mt-2">
                 Unlimited scans • Priority processing
               </p>
-            </>
-          )}
-
-          {plan === "premium" && (
-            <button
-              onClick={handleDowngrade}
-              className="w-full rounded-full py-2.5 text-sm font-semibold text-muted-foreground glass"
-            >
-              Switch to Free
-            </button>
-          )}
+          </>
         </div>
       </div>
 
