@@ -177,6 +177,7 @@ export const useAppStore = create<AppState>()(
         language: "English",
       },
       addScan: (s) => set((state) => ({ scans: [s, ...state.scans] })),
+      addReceipt: (r) => set((state) => ({ receipts: [r, ...state.receipts] })),
       toggleSaved: (id) =>
         set((state) => ({
           scans: state.scans.map((sc) => (sc.id === id ? { ...sc, saved: !sc.saved } : sc)),
