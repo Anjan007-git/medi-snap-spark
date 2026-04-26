@@ -1,11 +1,11 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Home, FileText, Camera, PieChart, Settings } from "lucide-react";
 
 const items = [
   { to: "/", label: "Home", icon: Home },
   { to: "/receipts", label: "Receipts", icon: FileText },
-  { to: "/scan", label: "Scan", icon: Camera, center: true },
+  { to: "/scan", label: "Scan", icon: Camera },
   { to: "/insights", label: "Insights", icon: PieChart },
   { to: "/settings", label: "Settings", icon: Settings },
 ];
@@ -14,11 +14,7 @@ const BottomNav = () => {
   const location = useLocation();
   const containerRef = useRef<HTMLDivElement>(null);
   const tabRefs = useRef<Array<HTMLAnchorElement | null>>([]);
-  const [indicator, setIndicator] = useState<{ left: number; width: number; center: boolean }>({
-    left: 0,
-    width: 0,
-    center: false,
-  });
+  const [indicator, setIndicator] = useState({ x: 0, width: 0, ready: false });
 
   const activeIndex = (() => {
     const path = location.pathname;
@@ -28,17 +24,26 @@ const BottomNav = () => {
     return idx === -1 ? 0 : idx;
   })();
 
-  useLayoutEffect(() => {
+  const measure = () => {
     const el = tabRefs.current[activeIndex];
     const container = containerRef.current;
     if (!el || !container) return;
     const elRect = el.getBoundingClientRect();
     const cRect = container.getBoundingClientRect();
     setIndicator({
-      left: elRect.left - cRect.left,
+      x: elRect.left - cRect.left,
       width: elRect.width,
-      center: !!items[activeIndex].center,
+      ready: true,
     });
+  };
+
+  useLayoutEffect(measure, [activeIndex]);
+
+  useEffect(() => {
+    const onResize = () => measure();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeIndex]);
 
   return (
@@ -48,90 +53,61 @@ const BottomNav = () => {
     >
       <div
         ref={containerRef}
-        className="relative rounded-full px-2 py-2 flex items-stretch justify-between shadow-float overflow-hidden"
+        className="relative rounded-full p-2 flex items-stretch"
         style={{
-          background:
-            "linear-gradient(135deg, hsla(0,0%,100%,0.78) 0%, hsla(214,100%,97%,0.72) 100%)",
-          backdropFilter: "blur(32px) saturate(160%)",
-          WebkitBackdropFilter: "blur(32px) saturate(160%)",
-          border: "1px solid hsla(0,0%,100%,0.55)",
+          background: "rgba(255,255,255,0.55)",
+          backdropFilter: "blur(30px) saturate(160%)",
+          WebkitBackdropFilter: "blur(30px) saturate(160%)",
+          border: "1px solid rgba(255,255,255,0.6)",
           boxShadow:
-            "0 10px 30px -10px rgba(15,23,42,0.18), inset 0 1px 0 hsla(0,0%,100%,0.7)",
+            "0 12px 40px -10px rgba(15,23,42,0.18), inset 0 1px 0 rgba(255,255,255,0.7)",
         }}
       >
-        {/* Sliding liquid highlight */}
+        {/* Single sliding liquid capsule */}
         <span
           aria-hidden
-          className="absolute top-1/2 -translate-y-1/2 rounded-full pointer-events-none transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+          className="absolute top-2 bottom-2 rounded-full pointer-events-none"
           style={{
-            left: indicator.left,
             width: indicator.width,
-            height: "calc(100% - 8px)",
-            background: indicator.center
-              ? "radial-gradient(circle at 50% 50%, hsla(217,91%,60%,0.18) 0%, hsla(217,91%,60%,0.06) 60%, transparent 80%)"
-              : "linear-gradient(135deg, hsla(217,91%,60%,0.14), hsla(213,94%,68%,0.10))",
-            boxShadow: indicator.center
-              ? "0 0 28px hsla(217,91%,60%,0.35)"
-              : "0 0 18px hsla(217,91%,60%,0.18)",
+            transform: `translateX(${indicator.x}px)`,
+            transition: indicator.ready
+              ? "transform 350ms cubic-bezier(0.34, 1.4, 0.64, 1), width 300ms ease"
+              : "none",
+            background: "linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%)",
+            boxShadow: "0 8px 25px rgba(59,130,246,0.35)",
+            opacity: indicator.ready ? 1 : 0,
           }}
         />
 
-        {items.map(({ to, label, icon: Icon, center }, i) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={to === "/"}
-            ref={(el) => (tabRefs.current[i] = el)}
-            className="relative z-10 flex-1 flex flex-col items-center justify-center gap-0.5 py-1.5 px-1 transition-transform active:scale-95"
-          >
-            {({ isActive }) => {
-              const showActive = isActive || i === activeIndex;
-              return (
-                <>
-                  <div
-                    className={`flex items-center justify-center transition-all duration-300 ${
-                      center ? "w-9 h-9" : "w-7 h-7"
-                    }`}
-                  >
-                    {center ? (
-                      <div
-                        className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                          showActive ? "shadow-[0_6px_20px_rgba(59,130,246,0.55)]" : ""
-                        }`}
-                        style={{
-                          background: showActive
-                            ? "linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%)"
-                            : "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
-                        }}
-                      >
-                        <Icon
-                          className="w-[18px] h-[18px] text-white"
-                          strokeWidth={2.4}
-                        />
-                      </div>
-                    ) : (
-                      <Icon
-                        className={`transition-colors duration-300 ${
-                          showActive ? "text-primary" : "text-foreground"
-                        }`}
-                        style={{ width: 22, height: 22 }}
-                        strokeWidth={2.2}
-                        fill={showActive ? "currentColor" : "none"}
-                      />
-                    )}
-                  </div>
-                  <span
-                    className={`text-[11px] leading-none font-medium transition-colors duration-300 ${
-                      showActive ? "text-primary" : "text-foreground/70"
-                    }`}
-                  >
-                    {label}
-                  </span>
-                </>
-              );
-            }}
-          </NavLink>
-        ))}
+        {items.map(({ to, label, icon: Icon }, i) => {
+          const isActive = i === activeIndex;
+          return (
+            <NavLink
+              key={to}
+              to={to}
+              end={to === "/"}
+              ref={(el) => (tabRefs.current[i] = el)}
+              className="relative z-10 flex-1 flex flex-col items-center justify-center gap-1 py-2 px-1 transition-transform duration-200 active:scale-95"
+              style={{ transform: isActive ? "scale(1.05)" : "scale(1)" }}
+            >
+              <Icon
+                className="transition-colors duration-300"
+                style={{
+                  width: 22,
+                  height: 22,
+                  color: isActive ? "#ffffff" : "#111827",
+                }}
+                strokeWidth={2.2}
+              />
+              <span
+                className="text-[11px] leading-none font-medium transition-colors duration-300"
+                style={{ color: isActive ? "#ffffff" : "#6B7280" }}
+              >
+                {label}
+              </span>
+            </NavLink>
+          );
+        })}
       </div>
     </nav>
   );
