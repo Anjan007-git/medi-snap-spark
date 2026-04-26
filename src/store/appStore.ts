@@ -37,6 +37,8 @@ interface AppState {
   reminders: Reminder[];
   settings: {
     notifications: boolean;
+    remindersEnabled: boolean;
+    safetyAlerts: boolean;
     biometric: boolean;
     darkMode: boolean;
     language: string;
