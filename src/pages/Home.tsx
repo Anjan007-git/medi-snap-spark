@@ -18,11 +18,13 @@ import {
 import { useState } from "react";
 import medicineBottle from "@/assets/medicine-bottle-3d.png";
 import avatarAlex from "@/assets/avatar-alex.jpg";
+import ReminderModal from "@/components/ReminderModal";
 
 const Home = () => {
   const navigate = useNavigate();
   const { user, scans } = useAppStore();
   const [tipDismissed, setTipDismissed] = useState(false);
+  const [reminderOpen, setReminderOpen] = useState(false);
 
   const recent = scans.slice(0, 3);
 
@@ -39,21 +41,21 @@ const Home = () => {
       sub: "View past scans",
       icon: History,
       bg: "from-violet-400 to-purple-600",
-      onClick: () => navigate("/receipts"),
+      onClick: () => navigate("/history"),
     },
     {
       label: "Reminders",
       sub: "Medicine alerts",
       icon: Bell,
       bg: "from-emerald-400 to-green-600",
-      onClick: () => navigate("/settings#reminders"),
+      onClick: () => setReminderOpen(true),
     },
     {
       label: "Saved",
       sub: "Your favorites",
       icon: Star,
       bg: "from-amber-400 to-orange-500",
-      onClick: () => navigate("/insights#saved"),
+      onClick: () => navigate("/saved"),
     },
   ];
 
