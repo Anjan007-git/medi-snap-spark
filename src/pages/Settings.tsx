@@ -164,6 +164,7 @@ const Settings = () => {
           tile="primary"
           title="About MediScan"
           subtitle="Learn more about the app"
+          onClick={() => setSheet("about")}
         />
         <Divider />
         <LinkRow
@@ -171,6 +172,7 @@ const Settings = () => {
           tile="success"
           title="Privacy Policy"
           subtitle="Read our privacy policy"
+          onClick={() => setSheet("privacy")}
         />
         <Divider />
         <LinkRow
@@ -178,6 +180,7 @@ const Settings = () => {
           tile="violet"
           title="Security"
           subtitle="Manage your data and security"
+          onClick={() => setSheet("security")}
         />
         <Divider />
         <LinkRow
@@ -185,6 +188,7 @@ const Settings = () => {
           tile="warning"
           title="Help & Support"
           subtitle="Get help and contact support"
+          onClick={() => setSheet("help")}
         />
       </section>
 
