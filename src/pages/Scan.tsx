@@ -459,6 +459,37 @@ const Scan = () => {
           </div>
         </div>
 
+        {/* MODE SWITCH */}
+        <div className="px-8 pb-2 flex justify-center">
+          <div className="relative glass-dark rounded-full p-1 inline-flex w-[220px]">
+            <span
+              className="absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-full shadow-glow transition-transform duration-300"
+              style={{
+                transform: mode === "receipt" ? "translateX(calc(100% + 4px))" : "translateX(0)",
+                background: "var(--gradient-primary)",
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => setMode("scan")}
+              className={`relative flex-1 py-2 text-xs font-bold rounded-full transition-colors z-10 ${
+                mode === "scan" ? "text-white" : "text-white/70"
+              }`}
+            >
+              Scan
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode("receipt")}
+              className={`relative flex-1 py-2 text-xs font-bold rounded-full transition-colors z-10 ${
+                mode === "receipt" ? "text-white" : "text-white/70"
+              }`}
+            >
+              Receipt
+            </button>
+          </div>
+        </div>
+
         {/* spacer for bottom nav */}
         <div className="pb-24" />
       </div>
