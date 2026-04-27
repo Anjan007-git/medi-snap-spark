@@ -74,6 +74,23 @@ export const useMedicineScanner = () => {
           confidence: data.confidence,
           isMedicine: true,
         });
+
+        // Persist to scan history
+        try {
+          const status: "safe" | "caution" | "danger" =
+            data.confidence >= 90 ? "safe" : data.confidence >= 80 ? "caution" : "danger";
+          useAppStore.getState().addScan({
+            id: scanId,
+            name: data.medicine.name,
+            description:
+              data.medicine.uses?.[0] || data.medicine.composition || data.medicine.generic || "",
+            status,
+            scannedAt: Date.now(),
+            expiry: "—",
+          });
+        } catch (e) {
+          console.warn("[MediScan] Failed to persist scan:", e);
+        }
       } catch (err) {
         console.error(`[MediScan] Scan ${scanId} error:`, err);
         if (activeScanIdRef.current === scanId) {
