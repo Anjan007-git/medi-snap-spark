@@ -35,7 +35,7 @@ const Scan = () => {
   const [camMessage, setCamMessage] = useState<string>("");
   const [facingMode, setFacingMode] = useState<"environment" | "user">("environment");
   const [flashOn, setFlashOn] = useState(false);
-  const [packType, setPackType] = useState<PackType>("Box");
+  
   const [showHelp, setShowHelp] = useState(false);
   const [uploadedPreview, setUploadedPreview] = useState<string | null>(null);
 
