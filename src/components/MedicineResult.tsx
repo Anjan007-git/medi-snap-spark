@@ -8,10 +8,13 @@ import {
   AlertOctagon,
   Share2,
   Bookmark,
+  BookmarkCheck,
   RefreshCw,
   FlaskConical,
 } from "lucide-react";
 import { MediCard, MediCardTitle, MediCardContent } from "./ui/MediCard";
+import { useAppStore } from "@/store/appStore";
+import { useToast } from "@/hooks/use-toast";
 
 export interface MedicineInfo {
   name: string;
@@ -66,6 +69,29 @@ const StatusTag = ({ confidence }: { confidence: number }) => {
 
 const MedicineResult = ({ medicine, confidence, onBack }: MedicineResultProps) => {
   const isLowConfidence = confidence < 80;
+  const { addSavedMedicine, removeSavedMedicine, isMedicineSaved, saved } = useAppStore();
+  const { toast } = useToast();
+  const alreadySaved = isMedicineSaved(medicine.name);
+  const status: "safe" | "caution" | "danger" =
+    confidence >= 90 ? "safe" : confidence >= 80 ? "caution" : "danger";
+
+  const handleSave = () => {
+    if (alreadySaved) {
+      const item = saved.find((s) => s.name.toLowerCase() === medicine.name.toLowerCase());
+      if (item) removeSavedMedicine(item.id);
+      toast({ title: "Removed from saved" });
+    } else {
+      addSavedMedicine({
+        name: medicine.name,
+        generic: medicine.generic,
+        status,
+        description: medicine.uses?.[0] || medicine.composition || "Saved medicine",
+        composition: medicine.composition,
+        uses: medicine.uses,
+      });
+      toast({ title: "Saved", description: `${medicine.name} added to Saved.` });
+    }
+  };
 
   return (
     <div className="pb-8 animate-fade-in-up">
@@ -271,9 +297,20 @@ const MedicineResult = ({ medicine, confidence, onBack }: MedicineResultProps) =
           <RefreshCw className="w-5 h-5 text-primary" />
           <span className="text-[11px] font-semibold text-foreground">Scan Again</span>
         </button>
-        <button className="glass rounded-2xl py-3 flex flex-col items-center gap-1 active:scale-95 transition-transform hover:shadow-glass-lg">
-          <Bookmark className="w-5 h-5 text-primary" />
-          <span className="text-[11px] font-semibold text-foreground">Save</span>
+        <button
+          onClick={handleSave}
+          className={`glass rounded-2xl py-3 flex flex-col items-center gap-1 active:scale-95 transition-transform hover:shadow-glass-lg ${
+            alreadySaved ? "ring-2 ring-primary/40" : ""
+          }`}
+        >
+          {alreadySaved ? (
+            <BookmarkCheck className="w-5 h-5 text-primary" fill="currentColor" fillOpacity={0.25} />
+          ) : (
+            <Bookmark className="w-5 h-5 text-primary" />
+          )}
+          <span className="text-[11px] font-semibold text-foreground">
+            {alreadySaved ? "Saved" : "Save"}
+          </span>
         </button>
         <button className="glass rounded-2xl py-3 flex flex-col items-center gap-1 active:scale-95 transition-transform hover:shadow-glass-lg">
           <Share2 className="w-5 h-5 text-primary" />

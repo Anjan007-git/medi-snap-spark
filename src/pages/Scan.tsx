@@ -17,8 +17,6 @@ import { useToast } from "@/hooks/use-toast";
 import MedicineResult from "@/components/MedicineResult";
 import ScanningOverlay from "@/components/ScanningOverlay";
 
-type PackType = "Box" | "Blister" | "Bottle";
-const PACK_TYPES: PackType[] = ["Box", "Blister", "Bottle"];
 
 type CamState = "idle" | "loading" | "ready" | "denied" | "notfound" | "unsupported" | "error";
 
@@ -37,7 +35,7 @@ const Scan = () => {
   const [camMessage, setCamMessage] = useState<string>("");
   const [facingMode, setFacingMode] = useState<"environment" | "user">("environment");
   const [flashOn, setFlashOn] = useState(false);
-  const [packType, setPackType] = useState<PackType>("Box");
+  
   const [showHelp, setShowHelp] = useState(false);
   const [uploadedPreview, setUploadedPreview] = useState<string | null>(null);
 
@@ -409,27 +407,8 @@ const Scan = () => {
           </div>
         </div>
 
-        {/* TYPE SELECTOR */}
-        <div className="pb-24 flex justify-center px-6">
-          <div className="glass-dark rounded-full p-1 inline-flex">
-            {PACK_TYPES.map((t) => {
-              const active = packType === t;
-              return (
-                <button
-                  key={t}
-                  onClick={() => setPackType(t)}
-                  className={`px-5 py-2 rounded-full text-[13px] font-semibold transition-all ${
-                    active
-                      ? "bg-primary/30 text-primary-glow shadow-[inset_0_0_0_1px_rgba(96,165,250,0.4)]"
-                      : "text-white/70"
-                  }`}
-                >
-                  {t}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        {/* spacer for bottom nav */}
+        <div className="pb-24" />
       </div>
 
       {/* HELP SHEET */}
