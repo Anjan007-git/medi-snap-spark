@@ -307,8 +307,14 @@ const Scan = () => {
           </button>
 
           <div className="text-center pt-1">
-            <h1 className="text-xl font-bold tracking-tight">Scan Medicine</h1>
-            <p className="text-[13px] text-white/70 mt-0.5">Position the medicine in the frame</p>
+            <h1 className="text-xl font-bold tracking-tight">
+              {mode === "receipt" ? "Capture Receipt" : "Scan Medicine"}
+            </h1>
+            <p className="text-[13px] text-white/70 mt-0.5">
+              {mode === "receipt"
+                ? "Center the receipt in the frame"
+                : "Position the medicine in the frame"}
+            </p>
           </div>
 
           <button
