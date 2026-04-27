@@ -69,6 +69,29 @@ const StatusTag = ({ confidence }: { confidence: number }) => {
 
 const MedicineResult = ({ medicine, confidence, onBack }: MedicineResultProps) => {
   const isLowConfidence = confidence < 80;
+  const { addSavedMedicine, removeSavedMedicine, isMedicineSaved, saved } = useAppStore();
+  const { toast } = useToast();
+  const alreadySaved = isMedicineSaved(medicine.name);
+  const status: "safe" | "caution" | "danger" =
+    confidence >= 90 ? "safe" : confidence >= 80 ? "caution" : "danger";
+
+  const handleSave = () => {
+    if (alreadySaved) {
+      const item = saved.find((s) => s.name.toLowerCase() === medicine.name.toLowerCase());
+      if (item) removeSavedMedicine(item.id);
+      toast({ title: "Removed from saved" });
+    } else {
+      addSavedMedicine({
+        name: medicine.name,
+        generic: medicine.generic,
+        status,
+        description: medicine.uses?.[0] || medicine.composition || "Saved medicine",
+        composition: medicine.composition,
+        uses: medicine.uses,
+      });
+      toast({ title: "Saved", description: `${medicine.name} added to Saved.` });
+    }
+  };
 
   return (
     <div className="pb-8 animate-fade-in-up">
