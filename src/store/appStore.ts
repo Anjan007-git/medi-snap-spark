@@ -60,6 +60,8 @@ interface AppState {
   };
   addScan: (s: ScanRecord) => void;
   addReceipt: (r: Receipt) => void;
+  hideReceipt: (id: string) => void;
+  deleteReceipt: (id: string) => void;
   toggleSaved: (id: string) => void;
   toggleReminder: (id: string) => void;
   addReminder: (r: Omit<Reminder, "id">) => void;
