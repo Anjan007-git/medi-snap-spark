@@ -22,6 +22,8 @@ import {
 } from "lucide-react";
 import avatarAlex from "@/assets/avatar-alex.jpg";
 
+type SheetKey = "about" | "privacy" | "security" | "help" | null;
+
 const Settings = () => {
   const navigate = useNavigate();
   const { settings, updateSetting, user } = useAppStore();
