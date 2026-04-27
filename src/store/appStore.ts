@@ -20,6 +20,8 @@ export interface Receipt {
   date: number;
   total: number;
   items: { name: string; qty: number; price: number }[];
+  imageUrl?: string;
+  hidden?: boolean;
 }
 
 export interface Reminder {
