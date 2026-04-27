@@ -186,11 +186,12 @@ const seedReminders: Reminder[] = [
 
 export const useAppStore = create<AppState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: { name: "Alex", greeting: "Your health, our priority" },
       scans: seedScans,
       receipts: seedReceipts,
       reminders: seedReminders,
+      saved: [],
       settings: {
         notifications: true,
         remindersEnabled: true,
@@ -211,6 +212,35 @@ export const useAppStore = create<AppState>()(
             r.id === id ? { ...r, enabled: !r.enabled } : r
           ),
         })),
+      addReminder: (r) =>
+        set((state) => ({
+          reminders: [
+            { ...r, id: `rm-${Date.now()}-${Math.random().toString(36).slice(2, 6)}` },
+            ...state.reminders,
+          ],
+        })),
+      deleteReminder: (id) =>
+        set((state) => ({ reminders: state.reminders.filter((r) => r.id !== id) })),
+      markReminderFired: (id, key) =>
+        set((state) => ({
+          reminders: state.reminders.map((r) =>
+            r.id === id ? { ...r, lastFiredKey: key } : r
+          ),
+        })),
+      addSavedMedicine: (m) =>
+        set((state) => {
+          if (state.saved.some((s) => s.name.toLowerCase() === m.name.toLowerCase())) return state;
+          return {
+            saved: [
+              { ...m, id: `sv-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, savedAt: Date.now() },
+              ...state.saved,
+            ],
+          };
+        }),
+      removeSavedMedicine: (id) =>
+        set((state) => ({ saved: state.saved.filter((s) => s.id !== id) })),
+      isMedicineSaved: (name) =>
+        get().saved.some((s) => s.name.toLowerCase() === name.toLowerCase()),
       updateSetting: (key, value) =>
         set((state) => ({ settings: { ...state.settings, [key]: value } })),
       clearHistory: () => set({ scans: [] }),
