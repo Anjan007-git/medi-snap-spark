@@ -206,6 +206,12 @@ export const useAppStore = create<AppState>()(
       },
       addScan: (s) => set((state) => ({ scans: [s, ...state.scans] })),
       addReceipt: (r) => set((state) => ({ receipts: [r, ...state.receipts] })),
+      hideReceipt: (id) =>
+        set((state) => ({
+          receipts: state.receipts.map((r) => (r.id === id ? { ...r, hidden: true } : r)),
+        })),
+      deleteReceipt: (id) =>
+        set((state) => ({ receipts: state.receipts.filter((r) => r.id !== id) })),
       toggleSaved: (id) =>
         set((state) => ({
           scans: state.scans.map((sc) => (sc.id === id ? { ...sc, saved: !sc.saved } : sc)),
