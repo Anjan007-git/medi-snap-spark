@@ -138,10 +138,44 @@ const Scan = () => {
     if (error) toast({ title: "Scan Failed", description: error, variant: "destructive" });
   }, [error, toast]);
 
+  const generateMockReceipt = useCallback(
+    (imageData: string) => {
+      const sampleItems = [
+        { name: "Paracetamol 500mg", qty: 2, price: 45 },
+        { name: "Vitamin C", qty: 1, price: 350 },
+        { name: "Cough Syrup", qty: 1, price: 250 },
+        { name: "Multivitamin", qty: 1, price: 480 },
+        { name: "Antiseptic Cream", qty: 1, price: 120 },
+      ];
+      const count = 2 + Math.floor(Math.random() * 3);
+      const items = sampleItems.slice(0, count);
+      const total = items.reduce((s, it) => s + it.qty * it.price, 0);
+      const pharmacies = ["Apollo Pharmacy", "MedPlus", "Netmeds", "Wellness Forever"];
+      addReceipt({
+        id: `r${Date.now()}`,
+        pharmacy: pharmacies[Math.floor(Math.random() * pharmacies.length)],
+        date: Date.now(),
+        total,
+        items,
+        imageUrl: imageData,
+      });
+      toast({
+        title: "Receipt added",
+        description: `Total ₹${total.toFixed(2)} • ${items.length} items`,
+      });
+      navigate("/receipts");
+    },
+    [addReceipt, navigate, toast]
+  );
+
   const handleCapture = useCallback(() => {
     // Capture from video OR from uploaded preview
     if (uploadedPreview) {
-      scanMedicine(uploadedPreview);
+      if (mode === "receipt") {
+        generateMockReceipt(uploadedPreview);
+      } else {
+        scanMedicine(uploadedPreview);
+      }
       return;
     }
     if (camState !== "ready" || !videoRef.current || !canvasRef.current) {
@@ -160,8 +194,12 @@ const Scan = () => {
     if (!ctx) return;
     ctx.drawImage(video, 0, 0);
     const imageData = canvas.toDataURL("image/jpeg", 0.85);
-    scanMedicine(imageData);
-  }, [scanMedicine, camState, uploadedPreview, toast]);
+    if (mode === "receipt") {
+      generateMockReceipt(imageData);
+    } else {
+      scanMedicine(imageData);
+    }
+  }, [scanMedicine, camState, uploadedPreview, toast, mode, generateMockReceipt]);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -181,8 +219,11 @@ const Scan = () => {
       // Stop camera while preview shown
       stopCamera();
       setCamState("idle");
-      // Auto-scan
-      scanMedicine(data);
+      if (mode === "receipt") {
+        generateMockReceipt(data);
+      } else {
+        scanMedicine(data);
+      }
     };
     reader.readAsDataURL(file);
     e.target.value = "";
