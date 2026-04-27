@@ -273,15 +273,14 @@ const Toggle = ({ value, onToggle }: { value: boolean; onToggle: () => void }) =
       e.stopPropagation();
       onToggle();
     }}
-    className={`relative w-12 h-7 rounded-full transition-all duration-300 shrink-0 ${
+    className={`relative w-12 h-7 rounded-full transition-colors duration-300 shrink-0 ${
       value ? "bg-primary shadow-glow" : "bg-muted"
     }`}
     aria-pressed={value}
   >
     <span
-      className={`absolute top-0.5 w-6 h-6 rounded-full bg-white shadow-md transition-transform duration-300 ${
-        value ? "translate-x-[22px]" : "translate-x-0.5"
-      }`}
+      className="absolute top-1/2 left-1 -translate-y-1/2 w-5 h-5 rounded-full bg-white shadow-md transition-transform duration-300"
+      style={{ transform: `translate(${value ? "20px" : "0"}, -50%)` }}
     />
   </button>
 );
