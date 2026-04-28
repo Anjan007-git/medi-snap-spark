@@ -76,11 +76,11 @@ const Home = () => {
       <header className="flex items-start justify-between animate-fade-in-up">
         <div>
           <h1 className="text-[28px] font-extrabold tracking-tight text-foreground flex items-center gap-2">
-            Hello, {user.name} <span className="text-2xl">👋</span>
+            Hello, {displayName} <span className="text-2xl">👋</span>
           </h1>
           <div className="flex items-center gap-1.5 mt-1.5">
             <ShieldCheck className="w-4 h-4 text-primary" strokeWidth={2.4} />
-            <p className="text-sm text-muted-foreground font-medium">{user.greeting}</p>
+            <p className="text-sm text-muted-foreground font-medium">{storeUser.greeting}</p>
           </div>
         </div>
         <button
@@ -89,12 +89,13 @@ const Home = () => {
           aria-label="Open profile"
         >
           <img
-            src={avatarAlex}
+            src={avatarUrl}
             alt="User profile"
             className="w-full h-full object-cover"
             width={56}
             height={56}
             loading="lazy"
+            referrerPolicy="no-referrer"
           />
           <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-primary border-2 border-white" />
         </button>
