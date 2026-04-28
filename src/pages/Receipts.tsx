@@ -7,11 +7,9 @@ import {
   ChevronRight,
   MoreHorizontal,
   FileText,
-  FileSpreadsheet,
   EyeOff,
   Trash2,
   Plus,
-  X,
 } from "lucide-react";
 import avatarAlex from "@/assets/avatar-alex.jpg";
 
