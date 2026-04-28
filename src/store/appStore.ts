@@ -1,5 +1,37 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
+
+const STORAGE_KEY_BASE = "mediscan-store";
+let CURRENT_USER_ID: string | null = null;
+
+const dynamicStorage = {
+  getItem: (_name: string) => {
+    if (!CURRENT_USER_ID) return null;
+    return localStorage.getItem(`${STORAGE_KEY_BASE}-${CURRENT_USER_ID}`);
+  },
+  setItem: (_name: string, value: string) => {
+    if (!CURRENT_USER_ID) return;
+    localStorage.setItem(`${STORAGE_KEY_BASE}-${CURRENT_USER_ID}`, value);
+  },
+  removeItem: (_name: string) => {
+    if (!CURRENT_USER_ID) return;
+    localStorage.removeItem(`${STORAGE_KEY_BASE}-${CURRENT_USER_ID}`);
+  },
+};
+
+/** Bind the persisted store to a user. New users start with empty state. */
+export const bindStoreToUser = (userId: string | null, displayName?: string, _avatarUrl?: string) => {
+  CURRENT_USER_ID = userId;
+  if (!userId) return;
+  // Re-hydrate the store from this user's storage slot
+  useAppStore.persist.rehydrate();
+  // Make sure greeting reflects this user
+  setTimeout(() => {
+    if (displayName) {
+      useAppStore.setState((s) => ({ user: { ...s.user, name: displayName } }));
+    }
+  }, 0);
+};
 
 export type ScanStatus = "safe" | "caution" | "danger";
 
