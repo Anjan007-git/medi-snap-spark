@@ -18,13 +18,24 @@ import {
 import { useState } from "react";
 import medicineBottle from "@/assets/medicine-bottle-3d.png";
 import avatarAlex from "@/assets/avatar-alex.jpg";
-import ReminderModal from "@/components/ReminderModal";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Home = () => {
   const navigate = useNavigate();
-  const { user, scans } = useAppStore();
+  const { scans, user: storeUser } = useAppStore();
+  const { user: authUser, profile } = useAuth();
   const [tipDismissed, setTipDismissed] = useState(false);
-  const [reminderOpen, setReminderOpen] = useState(false);
+
+  const displayName =
+    profile?.display_name ||
+    (authUser?.user_metadata as any)?.full_name ||
+    (authUser?.user_metadata as any)?.name ||
+    storeUser.name ||
+    "there";
+  const avatarUrl =
+    profile?.avatar_url ||
+    (authUser?.user_metadata as any)?.avatar_url ||
+    avatarAlex;
 
   const recent = scans.slice(0, 3);
 
@@ -48,7 +59,7 @@ const Home = () => {
       sub: "Medicine alerts",
       icon: Bell,
       bg: "from-emerald-400 to-green-600",
-      onClick: () => setReminderOpen(true),
+      onClick: () => navigate("/home/reminders"),
     },
     {
       label: "Saved",
