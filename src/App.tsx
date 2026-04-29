@@ -55,8 +55,10 @@ const App = () => (
               <Route path="/saved" element={<Saved />} />
               <Route path="/insights" element={<Insights />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/settings/profile" element={<ProfileEdit />} />
               <Route path="/settings/:kind" element={<SettingsContent />} />
               <Route path="/home/reminders" element={<Reminders />} />
+              <Route path="/insights/categories" element={<InsightsCategories />} />
               <Route path="/medicine/:id" element={<MedicineDetail />} />
               <Route path="/receipts/:id" element={<ReceiptDetail />} />
             </Route>
