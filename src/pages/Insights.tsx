@@ -120,7 +120,7 @@ const Insights = () => {
           className="relative w-14 h-14 rounded-full overflow-hidden ring-2 ring-white shadow-glass active:scale-95 transition"
           aria-label="Profile"
         >
-          <img src={avatarAlex} alt="Profile" className="w-full h-full object-cover" loading="lazy" />
+          <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" loading="lazy" referrerPolicy="no-referrer" />
           <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-primary border-2 border-white" />
         </button>
       </header>
