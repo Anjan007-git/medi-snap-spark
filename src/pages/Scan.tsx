@@ -536,11 +536,6 @@ const Scan = () => {
   );
 };
 
-const CornerBracket = ({ className }: { className: string }) => (
-  <span
-    className={`absolute w-12 h-12 border-primary-glow shadow-[0_0_16px_rgba(96,165,250,0.8)] ${className}`}
-    style={{ borderColor: "hsl(213 94% 75%)" }}
-  />
-);
+const CornerBracket = (_: { className?: string }) => null;
 
 export default Scan;
