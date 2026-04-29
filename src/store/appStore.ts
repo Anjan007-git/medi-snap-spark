@@ -107,6 +107,7 @@ interface AppState {
     value: AppState["settings"][K]
   ) => void;
   clearHistory: () => void;
+  setUserName: (name: string) => void;
 }
 
 // Seed data removed — new users start with an empty state.
