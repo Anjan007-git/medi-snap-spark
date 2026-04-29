@@ -346,18 +346,12 @@ const Scan = () => {
           </div>
         </div>
 
-        {/* SCAN FRAME */}
+        {/* SCAN FRAME — single rounded liquid-glass rectangle */}
         <div className="flex-1 flex items-center justify-center px-6">
-          <div className="relative w-full max-w-[340px] aspect-square rounded-[28px]">
-            {/* Glowing corner brackets */}
-            <CornerBracket className="top-0 left-0 border-t-[3px] border-l-[3px] rounded-tl-[28px]" />
-            <CornerBracket className="top-0 right-0 border-t-[3px] border-r-[3px] rounded-tr-[28px]" />
-            <CornerBracket className="bottom-0 left-0 border-b-[3px] border-l-[3px] rounded-bl-[28px]" />
-            <CornerBracket className="bottom-0 right-0 border-b-[3px] border-r-[3px] rounded-br-[28px]" />
-
+          <div className="relative w-full max-w-[340px] aspect-square scan-frame-glass">
             {/* Animated scanning line */}
             {(showVideo || showUploaded) && (
-              <div className="absolute left-2 right-2 h-[2px] bg-primary-glow rounded-full animate-scan-sweep shadow-[0_0_20px_rgba(96,165,250,0.9),0_0_40px_rgba(59,130,246,0.6)]" />
+              <div className="absolute left-3 right-3 h-[2px] bg-primary-glow rounded-full animate-scan-sweep shadow-[0_0_20px_rgba(96,165,250,0.9),0_0_40px_rgba(59,130,246,0.6)]" />
             )}
 
             {/* Camera state inside frame */}
@@ -542,11 +536,6 @@ const Scan = () => {
   );
 };
 
-const CornerBracket = ({ className }: { className: string }) => (
-  <span
-    className={`absolute w-12 h-12 border-primary-glow shadow-[0_0_16px_rgba(96,165,250,0.8)] ${className}`}
-    style={{ borderColor: "hsl(213 94% 75%)" }}
-  />
-);
+const CornerBracket = (_: { className?: string }) => null;
 
 export default Scan;

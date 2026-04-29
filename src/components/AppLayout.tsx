@@ -1,10 +1,11 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import BottomNav from "./BottomNav";
 import { useAppStore } from "@/store/appStore";
 
 const AppLayout = () => {
   const darkMode = useAppStore((s) => s.settings.darkMode);
+  const location = useLocation();
 
   useEffect(() => {
     const root = document.documentElement;
@@ -14,7 +15,9 @@ const AppLayout = () => {
 
   return (
     <div className="min-h-screen pb-32">
-      <Outlet />
+      <div key={location.pathname} className="page-transition">
+        <Outlet />
+      </div>
       <BottomNav />
     </div>
   );

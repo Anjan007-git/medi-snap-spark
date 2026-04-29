@@ -29,6 +29,7 @@ import {
   X,
 } from "lucide-react";
 import avatarAlex from "@/assets/avatar-alex.jpg";
+import { useAuth } from "@/contexts/AuthContext";
 
 const formatINR = (n: number) =>
   `₹${n.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -36,6 +37,11 @@ const formatINR = (n: number) =>
 const Insights = () => {
   const navigate = useNavigate();
   const { scans, receipts, reminders } = useAppStore();
+  const { user: authUser, profile } = useAuth();
+  const avatarUrl =
+    profile?.avatar_url ||
+    (authUser?.user_metadata as any)?.avatar_url ||
+    avatarAlex;
   const [tipDismissed, setTipDismissed] = useState(false);
 
   // Weekly bar chart data — last 7 days actual scans, padded with sample variation for demo
@@ -114,7 +120,7 @@ const Insights = () => {
           className="relative w-14 h-14 rounded-full overflow-hidden ring-2 ring-white shadow-glass active:scale-95 transition"
           aria-label="Profile"
         >
-          <img src={avatarAlex} alt="Profile" className="w-full h-full object-cover" loading="lazy" />
+          <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" loading="lazy" referrerPolicy="no-referrer" />
           <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-primary border-2 border-white" />
         </button>
       </header>
@@ -208,7 +214,13 @@ const Insights = () => {
       >
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-bold text-foreground">Most Scanned Categories</h3>
-          <ChevronRight className="w-5 h-5 text-muted-foreground" strokeWidth={2.4} />
+          <button
+            onClick={() => navigate("/insights/categories")}
+            className="w-8 h-8 rounded-full glass-subtle flex items-center justify-center active:scale-90"
+            aria-label="View all categories"
+          >
+            <ChevronRight className="w-4 h-4 text-primary" strokeWidth={2.6} />
+          </button>
         </div>
         <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
           <div className="h-[120px]">

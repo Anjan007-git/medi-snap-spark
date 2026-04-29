@@ -12,6 +12,7 @@ import {
   Plus,
 } from "lucide-react";
 import avatarAlex from "@/assets/avatar-alex.jpg";
+import { useAuth } from "@/contexts/AuthContext";
 
 type FilterKey = "all" | "month" | "3months" | "older" | "custom";
 
@@ -38,6 +39,11 @@ const monthKey = (ts: number) =>
 const Receipts = () => {
   const navigate = useNavigate();
   const { receipts, hideReceipt, deleteReceipt } = useAppStore();
+  const { user: authUser, profile } = useAuth();
+  const avatarUrl =
+    profile?.avatar_url ||
+    (authUser?.user_metadata as any)?.avatar_url ||
+    avatarAlex;
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<FilterKey>("all");
   const [showFilter, setShowFilter] = useState(false);
@@ -96,7 +102,7 @@ const Receipts = () => {
           className="relative w-14 h-14 rounded-full overflow-hidden ring-2 ring-white shadow-glass active:scale-95 transition"
           aria-label="Open profile"
         >
-          <img src={avatarAlex} alt="Profile" className="w-full h-full object-cover" loading="lazy" />
+          <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" loading="lazy" referrerPolicy="no-referrer" />
           <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-primary border-2 border-white" />
         </button>
       </header>
