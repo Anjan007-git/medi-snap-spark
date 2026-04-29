@@ -37,6 +37,11 @@ const formatINR = (n: number) =>
 const Insights = () => {
   const navigate = useNavigate();
   const { scans, receipts, reminders } = useAppStore();
+  const { user: authUser, profile } = useAuth();
+  const avatarUrl =
+    profile?.avatar_url ||
+    (authUser?.user_metadata as any)?.avatar_url ||
+    avatarAlex;
   const [tipDismissed, setTipDismissed] = useState(false);
 
   // Weekly bar chart data — last 7 days actual scans, padded with sample variation for demo
