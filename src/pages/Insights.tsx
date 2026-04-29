@@ -29,6 +29,7 @@ import {
   X,
 } from "lucide-react";
 import avatarAlex from "@/assets/avatar-alex.jpg";
+import { useAuth } from "@/contexts/AuthContext";
 
 const formatINR = (n: number) =>
   `₹${n.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
