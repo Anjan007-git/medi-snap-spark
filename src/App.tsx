@@ -20,6 +20,7 @@ import Reminders from "./pages/Reminders";
 import SettingsContent from "./pages/SettingsContent";
 import ProfileEdit from "./pages/ProfileEdit";
 import InsightsCategories from "./pages/InsightsCategories";
+import UploadImage from "./pages/UploadImage";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -58,6 +59,7 @@ const App = () => (
               <Route path="/settings/profile" element={<ProfileEdit />} />
               <Route path="/settings/:kind" element={<SettingsContent />} />
               <Route path="/home/reminders" element={<Reminders />} />
+              <Route path="/home/uploadimage" element={<UploadImage />} />
               <Route path="/insights/categories" element={<InsightsCategories />} />
               <Route path="/medicine/:id" element={<MedicineDetail />} />
               <Route path="/receipts/:id" element={<ReceiptDetail />} />
