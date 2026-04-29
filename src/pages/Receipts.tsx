@@ -12,6 +12,7 @@ import {
   Plus,
 } from "lucide-react";
 import avatarAlex from "@/assets/avatar-alex.jpg";
+import { useAuth } from "@/contexts/AuthContext";
 
 type FilterKey = "all" | "month" | "3months" | "older" | "custom";
 
