@@ -97,6 +97,17 @@ const Reminders = () => {
         ))}
       </div>
 
+      {/* Floating add button (matches Receipts FAB style) */}
+      <button
+        onClick={() => setModalOpen(true)}
+        className="fixed bottom-28 right-5 z-30 h-14 pl-4 pr-5 rounded-full flex items-center gap-2 text-white font-bold text-sm shadow-glow active:scale-95 transition glossy"
+        style={{ background: "var(--gradient-primary)" }}
+        aria-label="Add Reminder"
+      >
+        <Plus className="w-5 h-5" strokeWidth={2.6} />
+        Reminder
+      </button>
+
       <ReminderModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );
