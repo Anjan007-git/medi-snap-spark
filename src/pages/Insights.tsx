@@ -347,9 +347,11 @@ const Insights = () => {
               </AreaChart>
             </ResponsiveContainer>
             {/* Floating peak label */}
-            <div className="absolute top-0 right-[28%] glass rounded-full px-2 py-0.5 text-[10px] font-bold text-primary shadow-soft">
-              ₹1,850
-            </div>
+            {peakPoint && peakPoint.y > 0 && (
+              <div className="absolute top-0 right-[28%] glass rounded-full px-2 py-0.5 text-[10px] font-bold text-primary shadow-soft">
+                {formatINR(peakPoint.y)}
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -459,11 +461,51 @@ const Insights = () => {
   );
 };
 
-const PeriodPill = () => (
-  <button className="glass-subtle rounded-full px-3 py-1.5 inline-flex items-center gap-1 text-xs font-semibold text-foreground/80">
-    This Month <ChevronDown className="w-3.5 h-3.5" strokeWidth={2.4} />
-  </button>
-);
+const PeriodPill = ({
+  value,
+  onChange,
+}: {
+  value: Period;
+  onChange: (v: Period) => void;
+}) => {
+  const [open, setOpen] = useState(false);
+  const options: Period[] = ["week", "month", "year"];
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="glass-subtle rounded-full px-3 py-1.5 inline-flex items-center gap-1 text-xs font-semibold text-foreground/80 active:scale-95"
+      >
+        {PERIOD_LABEL[value]} <ChevronDown className="w-3.5 h-3.5" strokeWidth={2.4} />
+      </button>
+      {open && (
+        <>
+          <button
+            className="fixed inset-0 z-10"
+            onClick={() => setOpen(false)}
+            aria-label="Close"
+          />
+          <div className="absolute right-0 top-full mt-1 z-20 glass-strong rounded-2xl p-1.5 min-w-[130px] shadow-glass-lg">
+            {options.map((o) => (
+              <button
+                key={o}
+                onClick={() => {
+                  onChange(o);
+                  setOpen(false);
+                }}
+                className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold transition ${
+                  value === o ? "bg-primary text-white" : "text-foreground/80 hover:bg-primary/10"
+                }`}
+              >
+                {PERIOD_LABEL[o]}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
 
 interface StatusCardProps {
   icon: any;
