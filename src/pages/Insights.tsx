@@ -252,41 +252,47 @@ const Insights = () => {
             <ChevronRight className="w-4 h-4 text-primary" strokeWidth={2.6} />
           </button>
         </div>
-        <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
-          <div className="h-[120px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={categories}
-                  dataKey="value"
-                  innerRadius={32}
-                  outerRadius={56}
-                  paddingAngle={2}
-                  startAngle={90}
-                  endAngle={-270}
-                >
-                  {categories.map((c) => (
-                    <Cell key={c.name} fill={c.color} stroke="white" strokeWidth={2} />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
+        {categories.length === 0 ? (
+          <p className="text-sm text-muted-foreground text-center py-6">
+            No scans yet — start scanning to see your most used categories.
+          </p>
+        ) : (
+          <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
+            <div className="h-[120px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={categories}
+                    dataKey="value"
+                    innerRadius={32}
+                    outerRadius={56}
+                    paddingAngle={2}
+                    startAngle={90}
+                    endAngle={-270}
+                  >
+                    {categories.map((c) => (
+                      <Cell key={c.name} fill={c.color} stroke="white" strokeWidth={2} />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <ul className="space-y-2">
+              {categories.map((c) => (
+                <li key={c.name} className="flex items-center justify-between text-sm">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="w-2.5 h-2.5 rounded-full shrink-0"
+                      style={{ background: c.color }}
+                    />
+                    <span className="font-medium text-foreground/90">{c.name}</span>
+                  </div>
+                  <span className="font-bold text-foreground">{c.value}%</span>
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul className="space-y-2">
-            {categories.map((c) => (
-              <li key={c.name} className="flex items-center justify-between text-sm">
-                <div className="flex items-center gap-2">
-                  <span
-                    className="w-2.5 h-2.5 rounded-full shrink-0"
-                    style={{ background: c.color }}
-                  />
-                  <span className="font-medium text-foreground/90">{c.name}</span>
-                </div>
-                <span className="font-bold text-foreground">{c.value}%</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        )}
       </section>
 
       {/* SPENDING OVERVIEW */}
