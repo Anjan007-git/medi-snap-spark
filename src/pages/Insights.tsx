@@ -34,6 +34,14 @@ import { useAuth } from "@/contexts/AuthContext";
 const formatINR = (n: number) =>
   `₹${n.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
+type Period = "week" | "month" | "year";
+
+const PERIOD_LABEL: Record<Period, string> = {
+  week: "This Week",
+  month: "This Month",
+  year: "This Year",
+};
+
 const Insights = () => {
   const navigate = useNavigate();
   const { scans, receipts, reminders } = useAppStore();
@@ -43,8 +51,30 @@ const Insights = () => {
     (authUser?.user_metadata as any)?.avatar_url ||
     avatarAlex;
   const [tipDismissed, setTipDismissed] = useState(false);
+  const [period, setPeriod] = useState<Period>("month");
 
-  // Weekly bar chart data — last 7 days actual scans, padded with sample variation for demo
+  const periodStart = useMemo(() => {
+    const d = new Date();
+    if (period === "week") {
+      d.setDate(d.getDate() - 7);
+    } else if (period === "month") {
+      d.setMonth(d.getMonth() - 1);
+    } else {
+      d.setFullYear(d.getFullYear() - 1);
+    }
+    return d.getTime();
+  }, [period]);
+
+  const filteredScans = useMemo(
+    () => scans.filter((s) => s.scannedAt >= periodStart),
+    [scans, periodStart]
+  );
+  const filteredReceipts = useMemo(
+    () => receipts.filter((r) => r.date >= periodStart),
+    [receipts, periodStart]
+  );
+
+  // Weekly bar chart data — actual scans only (last 7 days, no demo floor)
   const weeklyBars = useMemo(() => {
     const labels = ["M", "T", "W", "T", "F", "S", "S"];
     const today = new Date();
@@ -57,53 +87,29 @@ const Insights = () => {
         const d = new Date(s.scannedAt);
         return d.toDateString() === day.toDateString();
       }).length;
-      // sprinkle filler for demo so chart isn't empty
-      const sample = [3, 2, 2, 3, 4, 3, 5][i];
-      return { label, value: Math.max(count, sample) + (i % 2 ? 1 : 0) };
+      return { label, value: count };
     });
   }, [scans]);
 
-  // Status counts (with sensible demo floors so the page feels alive)
-  const safeCount = Math.max(scans.filter((s) => s.status === "safe").length, 24);
-  const cautionCount = Math.max(scans.filter((s) => s.status === "caution").length, 6);
-  const dangerCount = Math.max(scans.filter((s) => s.status === "danger").length, 2);
+  // Real status counts (no demo floors)
+  const safeCount = filteredScans.filter((s) => s.status === "safe").length;
+  const cautionCount = filteredScans.filter((s) => s.status === "caution").length;
+  const dangerCount = filteredScans.filter((s) => s.status === "danger").length;
   const totalScans = safeCount + cautionCount + dangerCount;
 
-  // Category pie data
-  const categories = [
-    { name: "Pain Relief", value: 45, color: "hsl(217 91% 60%)" },
-    { name: "Antibiotics", value: 25, color: "hsl(142 71% 45%)" },
-    { name: "Vitamins", value: 15, color: "hsl(25 95% 55%)" },
-    { name: "Others", value: 15, color: "hsl(262 83% 65%)" },
-  ];
+  // Real spending — only filtered receipts
+  const totalSpent = filteredReceipts.reduce((s, r) => s + r.total, 0);
 
-  // Spending — current month total, plus 12-point smoothed line
-  const monthSpend = receipts
-    .filter((r) => {
-      const d = new Date(r.date);
-      const now = new Date();
-      return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-    })
-    .reduce((s, r) => s + r.total, 0);
+  // Spending line — bucketed by week within the period
+  const spendLine = useMemo(() => {
+    if (filteredReceipts.length === 0) {
+      return [{ x: 1, y: 0 }];
+    }
+    const sorted = [...filteredReceipts].sort((a, b) => a.date - b.date);
+    return sorted.map((r, i) => ({ x: i + 1, y: r.total }));
+  }, [filteredReceipts]);
 
-  const totalSpentDisplay = monthSpend > 0 ? monthSpend : 5550;
-
-  const spendLine = [
-    { x: 1, y: 1100 },
-    { x: 2, y: 1350 },
-    { x: 3, y: 1200 },
-    { x: 4, y: 1500 },
-    { x: 5, y: 1700 },
-    { x: 6, y: 1450 },
-    { x: 7, y: 1850 },
-    { x: 8, y: 1620 },
-    { x: 9, y: 1500 },
-    { x: 10, y: 1700 },
-    { x: 11, y: 1900 },
-    { x: 12, y: 2100 },
-  ];
-
-  const peakPoint = spendLine[6]; // ₹1,850 highlighted
+  const peakPoint = spendLine.reduce((m, p) => (p.y > m.y ? p : m), spendLine[0]);
 
   return (
     <div className="px-5 pt-12 space-y-5">
