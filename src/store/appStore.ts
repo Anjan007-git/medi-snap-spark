@@ -83,8 +83,15 @@ export interface SavedMedicine {
   description: string;
   composition?: string;
   uses?: string[];
+  dosage?: string;
+  precautions?: string[];
+  warnings?: string[];
+  sideEffects?: string[];
+  storage?: string;
   savedAt: number;
 }
+
+export type Plan = "basic" | "premium";
 
 interface AppState {
   user: { name: string; greeting: string };
