@@ -377,56 +377,41 @@ const Insights = () => {
           </button>
         </div>
         <div>
-          {(reminders.length > 0
-            ? reminders.slice(0, 2)
-            : [
-                {
-                  id: "demo1",
-                  medicine: "Paracetamol 500mg",
-                  time: "01:00 PM",
-                  enabled: true,
-                  frequency: "daily" as const,
-                },
-                {
-                  id: "demo2",
-                  medicine: "Amoxicillin 500mg",
-                  time: "08:00 PM",
-                  enabled: true,
-                  frequency: "daily" as const,
-                },
-              ]
-          ).map((r, i) => {
-            const isEvening = i === 1;
-            return (
-              <div
-                key={r.id}
-                className="flex items-center gap-3 py-3 border-b border-border/40 last:border-0"
-              >
+          {reminders.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-4">
+              No reminders set yet.
+            </p>
+          ) : (
+            reminders.slice(0, 2).map((r, i) => {
+              const isEvening = i === 1;
+              return (
                 <div
-                  className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ${
-                    isEvening ? "bg-warning-light" : "bg-success-light"
-                  }`}
+                  key={r.id}
+                  className="flex items-center gap-3 py-3 border-b border-border/40 last:border-0"
                 >
-                  <Bell
-                    className={`w-5 h-5 ${isEvening ? "text-warning" : "text-success"}`}
-                    strokeWidth={2.2}
-                    fill="currentColor"
-                    fillOpacity={0.15}
-                  />
+                  <div
+                    className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ${
+                      isEvening ? "bg-warning-light" : "bg-success-light"
+                    }`}
+                  >
+                    <Bell
+                      className={`w-5 h-5 ${isEvening ? "text-warning" : "text-success"}`}
+                      strokeWidth={2.2}
+                      fill="currentColor"
+                      fillOpacity={0.15}
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-sm text-foreground truncate">{r.medicine}</p>
+                    <p className="text-[12px] text-muted-foreground mt-0.5 capitalize">
+                      {r.frequency}
+                    </p>
+                  </div>
+                  <span className="text-sm font-semibold text-primary">{r.time}</span>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-bold text-sm text-foreground truncate">{r.medicine}</p>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">
-                    {i === 0 ? "1 tablet after lunch" : "1 capsule after dinner"}
-                  </p>
-                </div>
-                <span className="text-sm font-semibold text-primary">{r.time}</span>
-                <button className="w-8 h-8 flex items-center justify-center text-muted-foreground active:opacity-60">
-                  <Bell className="w-4 h-4" strokeWidth={2.2} />
-                </button>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
       </section>
 
