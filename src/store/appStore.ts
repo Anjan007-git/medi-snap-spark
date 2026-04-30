@@ -44,6 +44,16 @@ export interface ScanRecord {
   expiry: string; // e.g. "Apr 2026"
   imageUrl?: string;
   saved?: boolean;
+  // Full medicine details captured at scan time
+  generic?: string;
+  composition?: string;
+  uses?: string[];
+  dosage?: string;
+  precautions?: string[];
+  warnings?: string[];
+  sideEffects?: string[];
+  storage?: string;
+  confidence?: number;
 }
 
 export interface Receipt {
