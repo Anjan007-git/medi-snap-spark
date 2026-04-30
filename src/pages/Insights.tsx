@@ -169,7 +169,7 @@ const Insights = () => {
             <h2 className="font-bold text-foreground">Scan Overview</h2>
             <Info className="w-4 h-4 text-muted-foreground" strokeWidth={2.2} />
           </div>
-          <PeriodPill />
+          <PeriodPill value={period} onChange={setPeriod} />
         </div>
 
         <div className="grid grid-cols-[auto_1fr] gap-4 items-end">
@@ -177,12 +177,8 @@ const Insights = () => {
             <p className="text-xs text-muted-foreground">Total scans</p>
             <div className="flex items-center gap-2 mt-1">
               <span className="text-4xl font-extrabold leading-none">{totalScans}</span>
-              <span className="inline-flex items-center gap-0.5 bg-success-light text-success text-xs font-bold px-2 py-1 rounded-full">
-                <TrendingUp className="w-3 h-3" strokeWidth={2.6} />
-                12%
-              </span>
             </div>
-            <p className="text-xs text-muted-foreground mt-3">vs last month</p>
+            <p className="text-xs text-muted-foreground mt-3">{PERIOD_LABEL[period]}</p>
           </div>
           <div className="h-28">
             <ResponsiveContainer width="100%" height="100%">
@@ -303,7 +299,7 @@ const Insights = () => {
             <h3 className="font-bold text-foreground">Spending Overview</h3>
             <Info className="w-4 h-4 text-muted-foreground" strokeWidth={2.2} />
           </div>
-          <PeriodPill />
+          <PeriodPill value={period} onChange={setPeriod} />
         </div>
 
         <div className="grid grid-cols-[auto_1fr] gap-4 items-end">
@@ -313,13 +309,13 @@ const Insights = () => {
             <div className="flex items-center gap-2 mt-2">
               <span className="text-xs text-muted-foreground">{filteredReceipts.length} receipts</span>
             </div>
-            <div className="flex items-center gap-2 mt-2">
-              <span className="inline-flex items-center gap-0.5 bg-success-light text-success text-xs font-bold px-2 py-1 rounded-full">
-                <TrendingDown className="w-3 h-3" strokeWidth={2.6} />
-                8%
-              </span>
-              <span className="text-xs text-muted-foreground">vs last month</span>
-            </div>
+            {filteredReceipts.length > 1 && (
+              <div className="flex items-center gap-2 mt-2">
+                <span className="text-xs text-muted-foreground">
+                  Avg {formatINR(totalSpent / filteredReceipts.length)}/receipt
+                </span>
+              </div>
+            )}
           </div>
           <div className="h-24 relative">
             <ResponsiveContainer width="100%" height="100%">
