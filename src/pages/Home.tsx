@@ -261,10 +261,81 @@ const Home = () => {
         </section>
       )}
 
-      
+      {/* iOS-style Action Sheet */}
+      {actionScan && (
+        <ActionSheet
+          title={actionScan.name}
+          subtitle="Scan history item"
+          onClose={() => setActionScan(null)}
+          onDelete={() => {
+            const id = actionScan.id;
+            setActionScan(null);
+            setRemovingId(id);
+            setTimeout(() => {
+              deleteScan(id);
+              setRemovingId(null);
+              toast({ title: "Deleted", description: `${actionScan.name} removed.` });
+            }, 280);
+          }}
+        />
+      )}
     </div>
   );
 };
+
+const ActionSheet = ({
+  title,
+  subtitle,
+  onClose,
+  onDelete,
+}: {
+  title: string;
+  subtitle?: string;
+  onClose: () => void;
+  onDelete: () => void;
+}) => (
+  <div
+    className="fixed inset-0 z-[80] flex items-end justify-center bg-black/40 backdrop-blur-sm animate-fade-in"
+    onClick={onClose}
+  >
+    <div
+      className="w-full max-w-md mx-3 mb-3 space-y-2 animate-fade-in-up"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div
+        className="rounded-2xl overflow-hidden"
+        style={{
+          background: "rgba(255,255,255,0.92)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+        }}
+      >
+        <div className="px-4 py-3 text-center border-b border-border/40">
+          <p className="text-[13px] font-semibold text-foreground truncate">{title}</p>
+          {subtitle && <p className="text-[11px] text-muted-foreground">{subtitle}</p>}
+        </div>
+        <button
+          onClick={onDelete}
+          className="w-full py-3.5 text-[16px] font-semibold text-danger flex items-center justify-center gap-2 active:bg-danger/5"
+        >
+          <Trash2 className="w-4 h-4" strokeWidth={2.4} />
+          Delete
+        </button>
+      </div>
+      <button
+        onClick={onClose}
+        className="w-full py-3.5 text-[16px] font-bold text-primary rounded-2xl"
+        style={{
+          background: "rgba(255,255,255,0.95)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+        }}
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+);
 
 const CornerBrackets = () => (
   <>
