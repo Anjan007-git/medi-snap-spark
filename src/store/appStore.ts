@@ -64,6 +64,10 @@ export interface Receipt {
   items: { name: string; qty: number; price: number }[];
   imageUrl?: string;
   hidden?: boolean;
+  // OCR-extracted fields (optional)
+  medicines?: string[];
+  rawText?: string;
+  dateText?: string;
 }
 
 export interface Reminder {
