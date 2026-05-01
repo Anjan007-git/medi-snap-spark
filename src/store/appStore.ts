@@ -166,6 +166,8 @@ export const useAppStore = create<AppState>()(
         set((state) => ({
           scans: state.scans.map((sc) => (sc.id === id ? { ...sc, saved: !sc.saved } : sc)),
         })),
+      deleteScan: (id) =>
+        set((state) => ({ scans: state.scans.filter((sc) => sc.id !== id) })),
       toggleReminder: (id) =>
         set((state) => ({
           reminders: state.reminders.map((r) =>
