@@ -117,6 +117,7 @@ interface AppState {
   hideReceipt: (id: string) => void;
   deleteReceipt: (id: string) => void;
   toggleSaved: (id: string) => void;
+  deleteScan: (id: string) => void;
   toggleReminder: (id: string) => void;
   addReminder: (r: Omit<Reminder, "id">) => void;
   deleteReminder: (id: string) => void;
