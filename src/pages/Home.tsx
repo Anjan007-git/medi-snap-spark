@@ -185,7 +185,13 @@ const Home = () => {
           </div>
           <div className="space-y-3">
             {recent.map((s) => (
-              <RecentScanCard key={s.id} scan={s} onClick={() => navigate(`/medicine/${s.id}`)} />
+              <RecentScanCard
+                key={s.id}
+                scan={s}
+                removing={removingId === s.id}
+                onClick={() => navigate(`/medicine/${s.id}`)}
+                onLongPress={() => setActionScan(s)}
+              />
             ))}
           </div>
         </section>
