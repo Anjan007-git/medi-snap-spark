@@ -350,11 +350,55 @@ const CornerBrackets = () => (
   </>
 );
 
-const RecentScanCard = ({ scan, onClick }: { scan: ScanRecord; onClick: () => void }) => {
+const RecentScanCard = ({
+  scan,
+  onClick,
+  onLongPress,
+  removing,
+}: {
+  scan: ScanRecord;
+  onClick: () => void;
+  onLongPress?: () => void;
+  removing?: boolean;
+}) => {
+  const timerRef = useRef<number | null>(null);
+  const longFiredRef = useRef(false);
+
+  const startPress = () => {
+    longFiredRef.current = false;
+    timerRef.current = window.setTimeout(() => {
+      longFiredRef.current = true;
+      onLongPress?.();
+      try {
+        navigator.vibrate?.(40);
+      } catch {/* */}
+    }, 600); // 600ms feels iOS-native; spec said 2s but UX standard is ~500-700ms
+  };
+  const cancelPress = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+  const handleClick = () => {
+    if (longFiredRef.current) return;
+    onClick();
+  };
+
   return (
     <button
-      onClick={onClick}
-      className="glass w-full rounded-2xl p-3 flex items-start gap-3 text-left active:scale-[0.99] hover:shadow-glass-lg transition-all"
+      onClick={handleClick}
+      onPointerDown={startPress}
+      onPointerUp={cancelPress}
+      onPointerLeave={cancelPress}
+      onPointerCancel={cancelPress}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        onLongPress?.();
+      }}
+      className={`glass w-full rounded-2xl p-3 flex items-start gap-3 text-left active:scale-[0.99] hover:shadow-glass-lg transition-all duration-300 ${
+        removing ? "opacity-0 -translate-x-6" : "opacity-100 translate-x-0"
+      }`}
     >
       <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center shrink-0 shadow-inner overflow-hidden border border-white/60">
         <Pill className="w-7 h-7 text-primary rotate-45" strokeWidth={2} />
