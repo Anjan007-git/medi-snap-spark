@@ -18,6 +18,7 @@ import Saved from "./pages/Saved";
 import MedicineDetail from "./pages/MedicineDetail";
 import ReceiptDetail from "./pages/ReceiptDetail";
 import Reminders from "./pages/Reminders";
+import ReminderAdd from "./pages/ReminderAdd";
 import SettingsContent from "./pages/SettingsContent";
 import ProfileEdit from "./pages/ProfileEdit";
 import InsightsCategories from "./pages/InsightsCategories";
