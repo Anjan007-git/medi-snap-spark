@@ -27,10 +27,10 @@ const Settings = () => {
   const { settings, updateSetting, user: storeUser, plan, setPlan } = useAppStore();
   const { user: authUser, profile, signOut } = useAuth();
   const displayName =
+    storeUser.name ||
     profile?.display_name ||
     (authUser?.user_metadata as any)?.full_name ||
     (authUser?.user_metadata as any)?.name ||
-    storeUser.name ||
     "there";
   const userEmail = storeUser.email || profile?.email || authUser?.email || "";
   const avatarUrl =

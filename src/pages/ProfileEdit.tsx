@@ -13,9 +13,9 @@ const ProfileEdit = () => {
   const { toast } = useToast();
 
   const initialName =
+    storeUser.name ||
     profile?.display_name ||
     (authUser?.user_metadata as any)?.full_name ||
-    storeUser.name ||
     "";
   const initialEmail = storeUser.email || profile?.email || authUser?.email || "";
 

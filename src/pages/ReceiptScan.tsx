@@ -9,6 +9,8 @@ import {
   Upload,
   ScanLine,
   CheckCircle2,
+  Zap,
+  ZapOff,
 } from "lucide-react";
 import Tesseract from "tesseract.js";
 import { useAppStore } from "@/store/appStore";
@@ -114,6 +116,7 @@ const ReceiptScan = () => {
   const [processing, setProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [parsed, setParsed] = useState<ParsedReceipt | null>(null);
+  const [flashOn, setFlashOn] = useState(false);
 
   const stopCamera = useCallback(() => {
     streamRef.current?.getTracks().forEach((t) => t.stop());
@@ -152,6 +155,17 @@ const ReceiptScan = () => {
     return () => stopCamera();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preview]);
+
+  // Torch toggle
+  useEffect(() => {
+    const stream = streamRef.current;
+    if (!stream || !camReady) return;
+    const track = stream.getVideoTracks()[0];
+    const caps = track?.getCapabilities?.() as any;
+    if (caps?.torch) {
+      track.applyConstraints({ advanced: [{ torch: flashOn }] } as any).catch(() => {});
+    }
+  }, [flashOn, camReady]);
 
   const runOCR = useCallback(
     async (imageData: string) => {
@@ -368,7 +382,19 @@ const ReceiptScan = () => {
             <h1 className="text-lg font-bold">Scan Receipt</h1>
             <p className="text-[12px] text-white/70 mt-0.5">Position receipt in the frame</p>
           </div>
-          <div className="w-11" />
+          <button
+            onClick={() => setFlashOn((v) => !v)}
+            className={`w-11 h-11 rounded-full backdrop-blur-md flex items-center justify-center active:scale-95 border border-white/15 ${
+              flashOn ? "bg-primary/30 shadow-[0_0_20px_rgba(59,130,246,0.6)]" : "bg-white/10"
+            }`}
+            aria-label="Toggle flash"
+          >
+            {flashOn ? (
+              <Zap className="w-5 h-5 text-primary-glow" strokeWidth={2.4} fill="currentColor" />
+            ) : (
+              <ZapOff className="w-5 h-5 text-white" strokeWidth={2.2} />
+            )}
+          </button>
         </header>
 
         <div className="flex justify-center px-5 mb-2">
@@ -404,7 +430,7 @@ const ReceiptScan = () => {
           </div>
         </div>
 
-        <div className="px-8 pb-10">
+        <div className="px-8" style={{ paddingBottom: `calc(120px + env(safe-area-inset-bottom, 0px))` }}>
           <div className="flex items-center justify-between max-w-sm mx-auto">
             <button
               onClick={() => fileInputRef.current?.click()}
