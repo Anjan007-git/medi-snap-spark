@@ -347,18 +347,23 @@ const ReceiptCard = ({
       {menuOpen && (
         <div
           ref={menuRef}
-          className="absolute top-10 right-3 z-20 glass-strong rounded-2xl py-1.5 w-36 shadow-float animate-fade-in-up"
+          className="absolute top-12 right-3 z-[60] glass-strong rounded-2xl p-2 w-40 shadow-float animate-fade-in-up flex flex-col gap-2"
+          style={{
+            background: "rgba(255,255,255,0.96)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+          }}
         >
           <button
             onClick={onHide}
-            className="w-full px-4 py-2.5 flex items-center gap-2 text-sm font-medium text-foreground hover:bg-primary/5 active:bg-primary/10"
+            className="w-full min-h-[44px] px-3 rounded-xl flex items-center gap-2 text-sm font-semibold text-foreground hover:bg-primary/5 active:bg-primary/10"
           >
             <EyeOff className="w-4 h-4" strokeWidth={2.4} />
             Hide
           </button>
           <button
             onClick={onDelete}
-            className="w-full px-4 py-2.5 flex items-center gap-2 text-sm font-medium text-danger hover:bg-danger/5 active:bg-danger/10"
+            className="w-full min-h-[44px] px-3 rounded-xl flex items-center gap-2 text-sm font-semibold text-danger hover:bg-danger/5 active:bg-danger/10"
           >
             <Trash2 className="w-4 h-4" strokeWidth={2.4} />
             Delete
