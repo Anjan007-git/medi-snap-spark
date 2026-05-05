@@ -382,7 +382,19 @@ const ReceiptScan = () => {
             <h1 className="text-lg font-bold">Scan Receipt</h1>
             <p className="text-[12px] text-white/70 mt-0.5">Position receipt in the frame</p>
           </div>
-          <div className="w-11" />
+          <button
+            onClick={() => setFlashOn((v) => !v)}
+            className={`w-11 h-11 rounded-full backdrop-blur-md flex items-center justify-center active:scale-95 border border-white/15 ${
+              flashOn ? "bg-primary/30 shadow-[0_0_20px_rgba(59,130,246,0.6)]" : "bg-white/10"
+            }`}
+            aria-label="Toggle flash"
+          >
+            {flashOn ? (
+              <Zap className="w-5 h-5 text-primary-glow" strokeWidth={2.4} fill="currentColor" />
+            ) : (
+              <ZapOff className="w-5 h-5 text-white" strokeWidth={2.2} />
+            )}
+          </button>
         </header>
 
         <div className="flex justify-center px-5 mb-2">
