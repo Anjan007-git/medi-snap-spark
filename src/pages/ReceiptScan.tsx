@@ -156,6 +156,17 @@ const ReceiptScan = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preview]);
 
+  // Torch toggle
+  useEffect(() => {
+    const stream = streamRef.current;
+    if (!stream || !camReady) return;
+    const track = stream.getVideoTracks()[0];
+    const caps = track?.getCapabilities?.() as any;
+    if (caps?.torch) {
+      track.applyConstraints({ advanced: [{ torch: flashOn }] } as any).catch(() => {});
+    }
+  }, [flashOn, camReady]);
+
   const runOCR = useCallback(
     async (imageData: string) => {
       setProcessing(true);
