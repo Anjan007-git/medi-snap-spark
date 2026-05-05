@@ -9,6 +9,8 @@ import {
   Upload,
   ScanLine,
   CheckCircle2,
+  Zap,
+  ZapOff,
 } from "lucide-react";
 import Tesseract from "tesseract.js";
 import { useAppStore } from "@/store/appStore";
