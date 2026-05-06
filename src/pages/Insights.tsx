@@ -370,7 +370,7 @@ const Insights = () => {
         <div className="flex items-center justify-between mb-3 px-1">
           <h3 className="font-bold text-foreground">Medicine Reminders</h3>
           <button
-            onClick={() => navigate("/settings#reminders")}
+            onClick={() => navigate("/home/reminders")}
             className="text-sm font-semibold text-primary active:opacity-70"
           >
             View All
