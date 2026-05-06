@@ -199,6 +199,27 @@ const Receipts = () => {
         })}
       </div>
 
+      {/* HIDDEN TOGGLE */}
+      <div className="flex items-center justify-between px-1 animate-fade-in-up">
+        <p className="text-xs text-muted-foreground">
+          {showHidden
+            ? `Showing ${hiddenCount} hidden receipt${hiddenCount === 1 ? "" : "s"}`
+            : hiddenCount > 0
+              ? `${hiddenCount} hidden receipt${hiddenCount === 1 ? "" : "s"}`
+              : "No hidden receipts"}
+        </p>
+        <button
+          onClick={() => setShowHidden((v) => !v)}
+          className={`rounded-full px-3 py-1.5 text-xs font-semibold inline-flex items-center gap-1.5 active:scale-95 transition ${
+            showHidden ? "text-white shadow-glow" : "glass text-foreground/80"
+          }`}
+          style={showHidden ? { background: "var(--gradient-primary)" } : undefined}
+        >
+          {showHidden ? <Eye className="w-3.5 h-3.5" strokeWidth={2.4} /> : <EyeOff className="w-3.5 h-3.5" strokeWidth={2.4} />}
+          {showHidden ? "Show All" : "Hidden"}
+        </button>
+      </div>
+
       {/* GROUPED LIST */}
       <div className="space-y-6 animate-fade-in-up" style={{ animationDelay: "180ms" }}>
         {grouped.map(([month, list]) => {
