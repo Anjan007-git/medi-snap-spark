@@ -115,6 +115,7 @@ interface AppState {
   addScan: (s: ScanRecord) => void;
   addReceipt: (r: Receipt) => void;
   hideReceipt: (id: string) => void;
+  unhideReceipt: (id: string) => void;
   deleteReceipt: (id: string) => void;
   toggleSaved: (id: string) => void;
   deleteScan: (id: string) => void;
