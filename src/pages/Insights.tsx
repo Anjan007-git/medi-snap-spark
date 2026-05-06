@@ -418,11 +418,12 @@ const Insights = () => {
       {/* HEALTH TIP */}
       {!tipDismissed && (
         <section
-          className="glass-tinted rounded-[24px] p-4 relative overflow-hidden animate-fade-in-up"
+          onClick={() => navigate("/home/healthtip")}
+          className="glass-tinted rounded-[24px] p-4 relative overflow-hidden animate-fade-in-up cursor-pointer active:scale-[0.99] transition"
           style={{ animationDelay: "360ms" }}
         >
           <button
-            onClick={() => setTipDismissed(true)}
+            onClick={(e) => { e.stopPropagation(); setTipDismissed(true); }}
             className="absolute top-3 right-3 w-6 h-6 rounded-full glass flex items-center justify-center active:scale-90"
             aria-label="Dismiss"
           >
@@ -442,7 +443,10 @@ const Insights = () => {
                 Always complete your full course of antibiotics as prescribed by your doctor.
               </p>
             </div>
-            <button className="glass-subtle rounded-full px-3 py-1.5 inline-flex items-center gap-1 text-[11px] font-semibold text-primary self-end shrink-0 active:scale-95">
+            <button
+              onClick={(e) => { e.stopPropagation(); navigate("/home/healthtip"); }}
+              className="glass-subtle rounded-full px-3 py-1.5 inline-flex items-center gap-1 text-[11px] font-semibold text-primary self-end shrink-0 active:scale-95"
+            >
               Learn More <ChevronRight className="w-3 h-3" strokeWidth={2.6} />
             </button>
           </div>
