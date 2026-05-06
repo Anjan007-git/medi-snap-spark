@@ -240,8 +240,13 @@ const Receipts = () => {
                   onMenu={() => setOpenMenu((v) => (v === r.id ? null : r.id))}
                   onMenuClose={() => setOpenMenu(null)}
                   onOpen={() => navigate(`/receipts/${r.id}`)}
+                  isHidden={!!r.hidden}
                   onHide={() => {
                     hideReceipt(r.id);
+                    setOpenMenu(null);
+                  }}
+                  onUnhide={() => {
+                    unhideReceipt(r.id);
                     setOpenMenu(null);
                   }}
                   onDelete={() => {
