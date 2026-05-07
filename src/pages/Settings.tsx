@@ -89,7 +89,7 @@ const Settings = () => {
             {plan === "premium" ? (
               <>
                 <Crown className="w-3 h-3" strokeWidth={2.6} fill="currentColor" />
-                Premium • ₹199/mo
+                Premium • ₹99/mo
               </>
             ) : (
               <>
@@ -140,7 +140,7 @@ const Settings = () => {
             <span className="text-sm font-bold text-foreground">Premium</span>
           </div>
           <p className="relative text-2xl font-extrabold text-foreground">
-            ₹199<span className="text-xs font-semibold text-muted-foreground">/mo</span>
+            ₹99<span className="text-xs font-semibold text-muted-foreground">/mo</span>
           </p>
           <p className="relative text-[11px] text-muted-foreground mt-1">Unlimited scans + Insights</p>
         </button>
