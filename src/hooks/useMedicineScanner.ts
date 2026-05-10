@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import { MedicineInfo } from "@/components/MedicineResult";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabaseClient";
 import { useAppStore } from "@/store/appStore";
 export interface ScanResult {
   medicine: MedicineInfo | null;

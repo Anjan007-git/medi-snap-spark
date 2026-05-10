@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import type { Session, User } from "@supabase/supabase-js";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabaseClient";
 
 interface Profile {
   display_name: string | null;
@@ -31,21 +31,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 1. Listener FIRST (no async work inside)
+    let mounted = true;
+
     const { data: sub } = supabase.auth.onAuthStateChange((_evt, sess) => {
+      if (!mounted) return;
       setSession(sess);
       setUser(sess?.user ?? null);
       if (!sess?.user) setProfile(null);
-    });
-
-    // 2. Then load existing session
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setUser(data.session?.user ?? null);
       setLoading(false);
     });
 
-    return () => sub.subscription.unsubscribe();
+    supabase.auth.getSession().then(({ data }) => {
+      if (!mounted) return;
+      setSession(data.session);
+      setUser(data.session?.user ?? null);
+      setLoading(false);
+    }).catch(() => {
+      if (mounted) setLoading(false);
+    });
+
+    return () => {
+      mounted = false;
+      sub.subscription.unsubscribe();
+    };
   }, []);
 
   // Load profile when user changes (deferred)

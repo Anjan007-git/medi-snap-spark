@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Mail, Lock, ShieldCheck, Sparkles, Eye, EyeOff } from "lucide-react";
@@ -11,6 +11,7 @@ const Login = () => {
   const { session, loading: authLoading } = useAuth();
   const { toast } = useToast();
   const initialMode = new URLSearchParams(location.search).get("mode") === "signup" ? "signup" : "signin";
+  const redirectAfterLogin = (location.state as { from?: string } | null)?.from || "/";
   const [mode, setMode] = useState<"signin" | "signup">(initialMode);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,8 +20,8 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    if (!authLoading && session) navigate("/", { replace: true });
-  }, [session, authLoading, navigate]);
+    if (!authLoading && session) navigate(redirectAfterLogin, { replace: true });
+  }, [session, authLoading, navigate, redirectAfterLogin]);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +33,7 @@ const Login = () => {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/`,
+            emailRedirectTo: `${window.location.origin}/auth/callback`,
             data: { full_name: name || email.split("@")[0] },
           },
         });
@@ -41,7 +42,7 @@ const Login = () => {
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        navigate("/", { replace: true });
+        navigate(redirectAfterLogin, { replace: true });
       }
     } catch (err: any) {
       toast({
@@ -58,6 +59,7 @@ const Login = () => {
     if (busy) return;
     setBusy(true);
     try {
+      try { localStorage.setItem("mediscan-auth-redirect", redirectAfterLogin); } catch { /* ignore */ }
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
