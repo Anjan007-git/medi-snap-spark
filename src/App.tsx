@@ -26,6 +26,7 @@ import UploadImage from "./pages/UploadImage";
 import PremiumPayment from "./pages/PremiumPayment";
 import HealthTip from "./pages/HealthTip";
 import Login from "./pages/Login";
+import AuthCallback from "./pages/AuthCallback";
 import Onboarding from "./pages/Onboarding";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
