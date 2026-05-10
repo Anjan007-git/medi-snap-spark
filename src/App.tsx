@@ -26,6 +26,7 @@ import UploadImage from "./pages/UploadImage";
 import PremiumPayment from "./pages/PremiumPayment";
 import HealthTip from "./pages/HealthTip";
 import Login from "./pages/Login";
+import AuthCallback from "./pages/AuthCallback";
 import Onboarding from "./pages/Onboarding";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -46,6 +47,7 @@ const App = () => (
           <Routes>
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route
