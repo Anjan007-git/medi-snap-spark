@@ -20,8 +20,8 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    if (!authLoading && session) navigate("/", { replace: true });
-  }, [session, authLoading, navigate]);
+    if (!authLoading && session) navigate(redirectAfterLogin, { replace: true });
+  }, [session, authLoading, navigate, redirectAfterLogin]);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +33,6 @@ const Login = () => {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/`,
             emailRedirectTo: `${window.location.origin}/auth/callback`,
             data: { full_name: name || email.split("@")[0] },
           },
