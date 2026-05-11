@@ -19,6 +19,9 @@ const Login = () => {
   const [busy, setBusy] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const getErrorMessage = (err: unknown) =>
+    err instanceof Error ? err.message : "Please try again.";
+
   useEffect(() => {
     if (!authLoading && session) navigate(redirectAfterLogin, { replace: true });
   }, [session, authLoading, navigate, redirectAfterLogin]);
@@ -44,10 +47,10 @@ const Login = () => {
         if (error) throw error;
         navigate(redirectAfterLogin, { replace: true });
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast({
         title: mode === "signup" ? "Sign up failed" : "Sign in failed",
-        description: err?.message || "Please try again.",
+        description: getErrorMessage(err),
         variant: "destructive",
       });
     } finally {
@@ -74,8 +77,8 @@ const Login = () => {
         setBusy(false);
         return;
       }
-    } catch (err: any) {
-      toast({ title: "Google sign-in failed", description: err?.message, variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Google sign-in failed", description: getErrorMessage(err), variant: "destructive" });
       setBusy(false);
     }
   };
