@@ -32,22 +32,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     let mounted = true;
+    let sessionRestored = false;
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_evt, sess) => {
+    const applySession = (sess: Session | null) => {
       if (!mounted) return;
       setSession(sess);
       setUser(sess?.user ?? null);
       if (!sess?.user) setProfile(null);
-      setLoading(false);
+    };
+
+    const { data: sub } = supabase.auth.onAuthStateChange((event, sess) => {
+      if (event === "INITIAL_SESSION" && sessionRestored) return;
+      applySession(sess);
+      if (event !== "INITIAL_SESSION" || sessionRestored) {
+        setLoading(false);
+      }
     });
 
     supabase.auth.getSession().then(({ data }) => {
       if (!mounted) return;
-      setSession(data.session);
-      setUser(data.session?.user ?? null);
+      sessionRestored = true;
+      applySession(data.session);
       setLoading(false);
     }).catch(() => {
-      if (mounted) setLoading(false);
+      if (mounted) {
+        sessionRestored = true;
+        setLoading(false);
+      }
     });
 
     return () => {
