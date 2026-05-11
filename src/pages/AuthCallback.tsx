@@ -8,6 +8,7 @@ const AuthCallback = () => {
 
   useEffect(() => {
     let cancelled = false;
+    let redirected = false;
     const getRedirectTarget = () => {
       try {
         const target = localStorage.getItem("mediscan-auth-redirect") || "/";
@@ -17,6 +18,11 @@ const AuthCallback = () => {
         return "/";
       }
     };
+    const finish = (target: string) => {
+      if (cancelled || redirected) return;
+      redirected = true;
+      navigate(target, { replace: true });
+    };
 
     const run = async () => {
       try {
@@ -25,7 +31,7 @@ const AuthCallback = () => {
         const errorDesc = url.searchParams.get("error_description") || url.searchParams.get("error");
 
         if (errorDesc) {
-          if (!cancelled) navigate("/login", { replace: true });
+          finish("/login");
           return;
         }
 
@@ -33,7 +39,7 @@ const AuthCallback = () => {
         if (code) {
           const { error } = await supabase.auth.exchangeCodeForSession(code);
           if (error) {
-            if (!cancelled) navigate("/login", { replace: true });
+            finish("/login");
             return;
           }
         }
@@ -41,15 +47,15 @@ const AuthCallback = () => {
         // Confirm session is set, then redirect.
         const { data } = await supabase.auth.getSession();
         if (cancelled) return;
-        navigate(data.session ? getRedirectTarget() : "/login", { replace: true });
+        finish(data.session ? getRedirectTarget() : "/login");
       } catch {
-        if (!cancelled) navigate("/login", { replace: true });
+        finish("/login");
       }
     };
 
     const { data: sub } = supabase.auth.onAuthStateChange((_evt, sess) => {
       if (cancelled) return;
-      if (sess) navigate(getRedirectTarget(), { replace: true });
+      if (sess) finish(getRedirectTarget());
     });
 
     run();
